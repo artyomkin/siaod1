@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeterminedKeyList implements IDeterminedIntegerKeyList {
+public class DeterministicKeyList implements IDeterministicIntegerKeyList {
 
     public List<Integer> keys;
 
-    public DeterminedKeyList(){}
+    public DeterministicKeyList(){}
 
-    public DeterminedKeyList(String filePath) throws FileNotFoundException {
+    public DeterministicKeyList(String filePath) throws FileNotFoundException {
         this.keys = loadFromFile(filePath);
     }
 
