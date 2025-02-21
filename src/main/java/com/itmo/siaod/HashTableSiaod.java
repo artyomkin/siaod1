@@ -33,23 +33,32 @@ public class HashTableSiaod implements IHashTableSiaod {
     }
 
     protected void addKey(Integer key) {
-        Integer firstLayerIndex = this.hashFunction.hash(key);
-        if (this.hashTable.get(firstLayerIndex) != null) {
+        if (key == null) return;
+        Integer index = this.hashFunction.hash(key);
+        if (this.hashTable.get(index) == null) {
+            addFirstLevelKey(index, key);
+        } else {
+            addSecondLevelKey(index, key);
+        }
+    }
+
+    protected void addFirstLevelKey(Integer index, Integer key){
+        if (index == null  || key == null || this.hashTable.get(index) != null) return;
+
+        ArrayList<Integer> firstLayerCell = new ArrayList<>();
+        firstLayerCell.add(key);
+        this.hashTable.set(index, firstLayerCell);
+    }
+
+    protected void addSecondLevelKey(Integer index, Integer key) {
+        ArrayList<Integer> secondLayerHashTable = this.hashTable.get(index);
+        if (secondLayerHashTable == null || secondLayerHashTable.isEmpty()) return;
+
+        if (secondLayerHashTable.size() == 1) {
 
         } else {
 
         }
-    }
-
-    protected void addFirstLevelKey(Integer key){
-        if (this.hashTable.get(key) != null) return;
-
-        ArrayList<Integer> secondLevelHashTable = new ArrayList<>();
-    }
-
-    protected void initializeSecondLevelHashTable(Integer index, Integer key) {
-        ArrayList<Integer> secondLevelHashTable = new ArrayList<>();
-        // TODO
     }
 
     @Override
