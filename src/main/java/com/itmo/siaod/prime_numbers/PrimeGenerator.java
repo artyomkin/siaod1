@@ -1,4 +1,6 @@
-package com.itmo.siaod;
+package com.itmo.siaod.prime_numbers;
+
+import com.itmo.siaod.hash_functions.IPrimeGenerator;
 
 public class PrimeGenerator implements IPrimeGenerator {
 

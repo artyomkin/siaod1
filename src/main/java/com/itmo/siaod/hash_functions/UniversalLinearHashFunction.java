@@ -1,6 +1,8 @@
-package com.itmo.siaod;
+package com.itmo.siaod.hash_functions;
 
-import com.itmo.siaod.exceptions.CannotFindNextPrimeException;
+import com.itmo.siaod.hash_tables.IUniversalHashFunction;
+import com.itmo.siaod.exceptions.TooBigNumberException;
+import com.itmo.siaod.prime_numbers.PrimeGenerator;
 
 import java.util.List;
 import java.util.Random;
@@ -13,7 +15,7 @@ public class UniversalLinearHashFunction implements IUniversalHashFunction {
     private Random rnd;
     private IPrimeGenerator primeGenerator;
 
-    public UniversalLinearHashFunction(List<Integer> allPossibleKeys, Integer hashTableSize) throws CannotFindNextPrimeException {
+    public UniversalLinearHashFunction(List<Integer> allPossibleKeys, Integer hashTableSize) throws TooBigNumberException {
         this.rnd = new Random();
         this.primeGenerator = new PrimeGenerator();
 
@@ -22,20 +24,24 @@ public class UniversalLinearHashFunction implements IUniversalHashFunction {
 
         p = Math.toIntExact(this.primeGenerator.findNextPrime(Long.valueOf(allUniquePossibleKeysCount)));
         if (p == null){
-            throw new CannotFindNextPrimeException();
+            throw new TooBigNumberException();
         }
-
-        a = (rnd.nextInt() & Integer.MAX_VALUE) % p;
-        if (a == 0){
-            a = 1;
-        }
-        b = (rnd.nextInt() & Integer.MAX_VALUE) % p;
         m = hashTableSize;
+
+        shuffleCoefficients();
     }
 
     @Override
     public Integer hash(Integer key) {
         return ((a * key + b) % p) % m;
+    }
+
+    protected void shuffleCoefficients(){
+        a = (rnd.nextInt() & Integer.MAX_VALUE) % p;
+        if (a == 0){
+            a = 1;
+        }
+        b = (rnd.nextInt() & Integer.MAX_VALUE) % p;
     }
 
 }

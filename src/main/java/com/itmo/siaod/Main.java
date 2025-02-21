@@ -5,8 +5,9 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        ArrayList<Integer> a = new ArrayList<>();
-        a.set(10, 15);
-        System.out.println(a.get(10));
+        Object[] test = new Object[5];
+        for (Object o : test){
+            System.out.println(o);
+        }
     }
 }

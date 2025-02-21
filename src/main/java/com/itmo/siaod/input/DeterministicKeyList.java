@@ -1,4 +1,4 @@
-package com.itmo.siaod;
+package com.itmo.siaod.input;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

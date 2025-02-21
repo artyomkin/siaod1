@@ -1,5 +1,6 @@
 package com.itmo.siaod;
 
+import com.itmo.siaod.prime_numbers.PrimeGenerator;
 import org.junit.Before;
 import org.junit.Test;
 

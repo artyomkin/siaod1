@@ -1,4 +1,4 @@
-package com.itmo.siaod;
+package com.itmo.siaod.prime_numbers;
 
 public class DeterministicMillerRabinTest implements IDeterministicMillerRabinTest {
     // a bases for all numbers < 10^18 < 2^64
