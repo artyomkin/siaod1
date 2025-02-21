@@ -1,6 +1,5 @@
-package com.itmo.siaod;
+package com.itmo.siaod.prime_numbers;
 
-import com.itmo.siaod.prime_numbers.PrimeGenerator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,13 +41,12 @@ public class TestPrimeGenerator {
         assertEquals((long)primeGenerator.findNextPrime(2L), 3);
         assertEquals((long)primeGenerator.findNextPrime(3L), 5);
         assertEquals((long)primeGenerator.findNextPrime(1000L), 1009);
-        assertEquals((long)primeGenerator.findNextPrime(Long.MAX_VALUE), 922337203687L);
+        assertEquals((long)primeGenerator.findNextPrime((long) Integer.MAX_VALUE), (long) 2147483659L);
     }
 
     @Test
     public void testEdgeCasesFindNextPrime(){
         assertNull(primeGenerator.findNextPrime(null));
-        assertNull(primeGenerator.findNextPrime((long) Integer.MAX_VALUE));
     }
 
     @Test

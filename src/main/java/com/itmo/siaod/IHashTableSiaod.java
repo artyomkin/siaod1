@@ -1,7 +1,9 @@
 package com.itmo.siaod;
 
+import com.itmo.siaod.exceptions.CollisionException;
+
 public interface IHashTableSiaod {
-    void put(Integer key, Integer val);
-    void get(Integer key);
-    void delete(Integer key);
+    boolean put(Integer key, Integer val);
+    Integer get(Integer key) throws CollisionException;
+    boolean delete(Integer key);
 }

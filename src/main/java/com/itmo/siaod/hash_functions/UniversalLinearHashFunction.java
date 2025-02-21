@@ -4,8 +4,7 @@ import com.itmo.siaod.hash_tables.IUniversalHashFunction;
 import com.itmo.siaod.exceptions.TooBigNumberException;
 import com.itmo.siaod.prime_numbers.PrimeGenerator;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class UniversalLinearHashFunction implements IUniversalHashFunction {
     private Integer a;
@@ -19,10 +18,9 @@ public class UniversalLinearHashFunction implements IUniversalHashFunction {
         this.rnd = new Random();
         this.primeGenerator = new PrimeGenerator();
 
-        List<Integer> allUniquePossibleKeys = allPossibleKeys.stream().distinct().toList();
-        Integer allUniquePossibleKeysCount = allUniquePossibleKeys.size();
+        int maxPossibleKey = allPossibleKeys.stream().max(Comparator.naturalOrder()).get();
 
-        p = Math.toIntExact(this.primeGenerator.findNextPrime(Long.valueOf(allUniquePossibleKeysCount)));
+        p = Math.toIntExact(this.primeGenerator.findNextPrime((long) maxPossibleKey));
         if (p == null){
             throw new TooBigNumberException();
         }

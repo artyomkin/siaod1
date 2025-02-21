@@ -1,0 +1,101 @@
+package com.itmo.siaod.hash_tables.buckets;
+
+import com.itmo.siaod.exceptions.TooBigNumberException;
+import com.itmo.siaod.hash_functions.UniversalLinearHashFunction;
+import com.itmo.siaod.hash_tables.IBucket;
+import com.itmo.siaod.hash_tables.ISimpleBucket;
+import com.itmo.siaod.hash_tables.IUniversalHashFunction;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+public class HashTableBucket implements IBucket {
+
+    private final Random rnd;
+    private ArrayList<Integer> hashTable;
+    private IUniversalHashFunction universalHashFunction;
+
+    public HashTableBucket(ISimpleBucket simpleBucket) throws TooBigNumberException {
+        this.rnd = new Random();
+        initHashTable(simpleBucket.getVals());
+    }
+
+    @Override
+    public boolean put(Integer key, Integer val) {
+        if (this.hashTable == null || this.hashTable.size() <= 1 || this.universalHashFunction == null) return false;
+
+        int index = this.universalHashFunction.hash(key);
+        this.hashTable.set(index, val);
+        return true;
+    }
+
+    @Override
+    public Integer get(Integer key) {
+        if (this.hashTable == null || this.hashTable.size() <= 1 || this.universalHashFunction == null) return null;
+
+        int index = this.universalHashFunction.hash(key);
+        return this.hashTable.get(index);
+    }
+
+    @Override
+    public int getSize() {
+        return this.hashTable.size();
+    }
+
+    @Override
+    public boolean delete(Integer key) {
+        if (this.hashTable == null || this.hashTable.size() <= 1 || this.universalHashFunction == null) return false;
+
+        int index = this.universalHashFunction.hash(key);
+        this.hashTable.set(index, null);
+        return true;
+    }
+
+    @Override
+    public void resetValues() {
+        this.hashTable.replaceAll(ignored -> null);
+    }
+
+    @Override
+    public boolean isSimple() {
+        return false;
+    }
+
+    protected int genHashTableSize(Integer keysCount) {
+        double antiCollisionFactor = (12d + (double)((rnd.nextInt() & Integer.MAX_VALUE) % 9d)) / 10d;
+        return (int) (antiCollisionFactor * Math.pow(keysCount, 2));
+    }
+
+    public void initHashTable(ArrayList<Integer> keysArr) throws TooBigNumberException {
+        if (keysArr == null || keysArr.size() <= 1) return;
+
+        int hashTableSize = genHashTableSize(keysArr.size());
+        this.universalHashFunction = chooseHashFunction(hashTableSize, keysArr);
+        this.hashTable = new ArrayList<>(hashTableSize);
+    }
+
+    protected IUniversalHashFunction chooseHashFunction(Integer hashTableSize, ArrayList<Integer> keysArr) throws TooBigNumberException {
+        IUniversalHashFunction function = null;
+        while (doesFunctionMakeCollisions(keysArr, function)){
+            function = shuffleFunction(keysArr, hashTableSize);
+        }
+        return function;
+    }
+
+    protected UniversalLinearHashFunction shuffleFunction(ArrayList<Integer> keysArr, int hashTableSize) throws TooBigNumberException {
+        return new UniversalLinearHashFunction(keysArr, hashTableSize);
+    }
+
+    protected boolean doesFunctionMakeCollisions(ArrayList<Integer> keysArr, IUniversalHashFunction function) {
+        if (keysArr == null || function == null) return true;
+        ArrayList<Integer> hashes = new ArrayList<>();
+        for (Integer key : keysArr) {
+            Integer hash = function.hash(key);
+            // collision
+            if (hashes.contains(hash)) return true;
+
+            hashes.add(hash);
+        }
+        return false;
+    }
+}

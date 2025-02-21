@@ -1,6 +1,5 @@
-package com.itmo.siaod;
+package com.itmo.siaod.prime_numbers;
 
-import com.itmo.siaod.prime_numbers.DeterministicMillerRabinTest;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -15,16 +14,16 @@ public class TestDeterministicMillerRabinTest {
 
     @Test
     public void testFastPowModulo(){
-        assertEquals((double)millerRabinTest.fastPowModulo(1L, 1L, 3L), 1);
-        assertEquals((double)millerRabinTest.fastPowModulo(1L, 0L, 3L), 1);
-        assertEquals((double)millerRabinTest.fastPowModulo(3L, 0L, 3L), 1);
-        assertEquals((double)millerRabinTest.fastPowModulo(21L, 8L, 126L), 63);
+        assertEquals((long)millerRabinTest.fastPowModulo(1L, 1L, 3L), 1);
+        assertEquals((long)millerRabinTest.fastPowModulo(1L, 0L, 3L), 1);
+        assertEquals((long)millerRabinTest.fastPowModulo(3L, 0L, 3L), 1);
+        assertEquals((long)millerRabinTest.fastPowModulo(21L, 8L, 126L), 63);
     }
 
     @Test
     public void testEdgeCasesFastPowModulo(){
-        assertEquals((double)millerRabinTest.fastPowModulo(1L, 1L, 1L), 0);
-        assertEquals((double)millerRabinTest.fastPowModulo(0L, 31L, 321L), 0);
+        assertEquals((long)millerRabinTest.fastPowModulo(1L, 1L, 1L), 0);
+        assertEquals((long)millerRabinTest.fastPowModulo(0L, 31L, 321L), 0);
         assertNull(millerRabinTest.fastPowModulo(1L, 1L, 0L));
         assertNull(millerRabinTest.fastPowModulo(1L, -2L, 1L));
         assertNull(millerRabinTest.fastPowModulo(-1L, 3L, 1L));
