@@ -16,42 +16,47 @@ public class HashTableSiaod implements IHashTableSiaod {
     private IUniversalHashFunction hashFunction;
     private Random rnd;
     private Integer hashTableSize;
-    private ArrayList<IBucket> buckets;
+    public ArrayList<IBucket> buckets;
 
     public HashTableSiaod(List<Integer> allPossibleKeys) throws TooBigNumberException {
+        if (allPossibleKeys.isEmpty())
+            throw new RuntimeException("No possible keys passed");
         int allPossibleKeysCount = allPossibleKeys.size();
 
         this.rnd = new Random();
-        this.hashFunction = new UniversalLinearHashFunction(allPossibleKeys, this.hashTableSize);
         this.hashTableSize = (12 + (rnd.nextInt() & Integer.MAX_VALUE) % 9) / 10 * allPossibleKeysCount;
+        this.hashFunction = new UniversalLinearHashFunction(allPossibleKeys, this.hashTableSize);
 
         initializeFirstLayer(allPossibleKeys);
         initializeSecondLayer();
         resetBuckets();
     }
 
-    protected void initializeFirstLayer(List<Integer> allPossibleKeys){
+    protected void initializeFirstLayer(List<Integer> allPossibleKeys) throws TooBigNumberException {
         this.buckets = new ArrayList<>(this.hashTableSize);
+        for (int i = 0; i < this.hashTableSize; i++){
+            this.buckets.add(null);
+        }
         for (Integer key : allPossibleKeys) {
             addKey(key);
         }
     }
 
-    protected void addKey(Integer key) {
+    protected void addKey(Integer key) throws TooBigNumberException {
         if (key == null) return;
 
-        Integer index = this.hashFunction.hash(key);
+        Integer index = Math.toIntExact(this.hashFunction.hash(key));
         if (this.buckets.get(index) == null) {
             IBucket simpleBucket = new SimpleBucket(key);
             this.buckets.set(index, simpleBucket);
         } else {
-            this.buckets.get(index).put(key, key);
+            this.buckets.get(index).putKey(key, key);
         }
     }
 
     protected void initializeSecondLayer() throws TooBigNumberException {
         for (int i = 0; i < this.buckets.size(); i++){
-            if (this.buckets.get(i).isSimple() && this.buckets.get(i).getSize() > 1) {
+            if (this.buckets.get(i) != null && this.buckets.get(i).isSimple() && this.buckets.get(i).getSize() > 1) {
                 this.buckets.set(i, simpleToHashTableBucket((ISimpleBucket) this.buckets.get(i)));
             }
         }
@@ -63,22 +68,40 @@ public class HashTableSiaod implements IHashTableSiaod {
 
     protected void resetBuckets(){
         for (IBucket bucket : buckets) {
-            bucket.resetValues();
+            if (bucket != null) {
+                bucket.resetValues();
+            }
         }
     }
 
     @Override
-    public boolean put(Integer key, Integer val) {
-        return this.buckets.get(key).put(key, val);
+    public boolean put(Integer key, Integer val) throws TooBigNumberException {
+        Integer index = Math.toIntExact(this.hashFunction.hash(key));
+        return this.buckets.get(index).put(key, val);
     }
 
     @Override
-    public Integer get(Integer key) throws CollisionException {
-        return this.buckets.get(key).get(key);
+    public Integer get(Integer key) throws CollisionException, TooBigNumberException {
+        Integer index = Math.toIntExact(this.hashFunction.hash(key));
+        return this.buckets.get(index).get(key);
     }
 
     @Override
-    public boolean delete(Integer key) {
-        return this.buckets.get(key).delete(key);
+    public boolean delete(Integer key) throws TooBigNumberException {
+        Integer index = Math.toIntExact(this.hashFunction.hash(key));
+        return this.buckets.get(index).delete(key);
+    }
+
+    @Override
+    public String toString(){
+        String res = "";
+        for (int i = 0; i < this.buckets.size(); i++) {
+            if (this.buckets.get(i) == null) {
+                res = res + " " + i + ": null" + "\n ";
+            } else {
+                res = res + " " + (this.buckets.get(i).isSimple() ? "simple" : "hashTable") + " " + i + ": " + this.buckets.get(i).toString() + "\n ";
+            }
+        }
+        return res;
     }
 }

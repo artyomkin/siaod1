@@ -1,5 +1,7 @@
 package com.itmo.siaod.hash_tables;
 
+import com.itmo.siaod.exceptions.TooBigNumberException;
+
 public interface IUniversalHashFunction {
-    Integer hash(Integer key);
+    Long hash(Integer key) throws TooBigNumberException;
 }

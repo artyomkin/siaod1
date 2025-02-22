@@ -24,8 +24,18 @@ public class SimpleBucket implements ISimpleBucket {
     }
 
     @Override
-    public boolean put(Integer key, Integer val) {
+    public boolean putKey(Integer key, Integer val) {
         this.values.add(val);
+        return true;
+    }
+
+    @Override
+    public boolean put(Integer key, Integer val) {
+        if (this.values.isEmpty()) {
+            this.values.add(val);
+        } else {
+            this.values.set(0, val);
+        }
         return true;
     }
 
@@ -52,11 +62,16 @@ public class SimpleBucket implements ISimpleBucket {
 
     @Override
     public void resetValues() {
-        this.values.replaceAll(ignored -> null);
+        this.values.clear();
     }
 
     @Override
     public boolean isSimple() {
         return true;
+    }
+
+    @Override
+    public String toString(){
+        return this.values.toString();
     }
 }

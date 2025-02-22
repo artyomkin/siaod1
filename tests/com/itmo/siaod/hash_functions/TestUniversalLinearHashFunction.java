@@ -1,7 +1,6 @@
 package com.itmo.siaod.hash_functions;
 
 import com.itmo.siaod.exceptions.TooBigNumberException;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -28,16 +27,16 @@ public class TestUniversalLinearHashFunction {
     }
 
     @Test
-    public void testIdempotency(){
+    public void testIdempotency() throws TooBigNumberException {
         int key = this.possibleKeys.get(0);
-        int hash = this.function.hash(key);
+        int hash = Math.toIntExact(this.function.hash(key));
         for (int i = 0; i < 10; i++){
-            assertEquals((int) this.function.hash(key), hash);
+            assertEquals((long) this.function.hash(key), hash);
         }
     }
 
     @Test
-    public void testBoundaries(){
+    public void testBoundaries() throws TooBigNumberException {
         for (Integer key : possibleKeys){
             assertTrue(this.function.hash(key) < this.hashTableSize);
         }

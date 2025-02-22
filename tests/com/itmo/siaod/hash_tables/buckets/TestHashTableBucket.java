@@ -33,5 +33,4 @@ public class TestHashTableBucket {
     public void testIsSimple(){
         assertFalse(this.bucket.isSimple());
     }
-
 }
