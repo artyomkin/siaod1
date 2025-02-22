@@ -6,18 +6,17 @@ import com.itmo.siaod.hash_functions.UniversalLinearHashFunction;
 import com.itmo.siaod.hash_tables.IBucket;
 import com.itmo.siaod.hash_tables.ISimpleBucket;
 import com.itmo.siaod.hash_tables.IUniversalHashFunction;
+import com.itmo.siaod.utils.RandomSiaod;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class HashTableBucket implements IBucket {
 
-    private final Random rnd;
     private ArrayList<Integer> hashTable;
     private IUniversalHashFunction universalHashFunction;
 
     public HashTableBucket(ISimpleBucket simpleBucket) throws TooBigNumberException {
-        this.rnd = new Random();
         initHashTable(simpleBucket.getVals());
     }
 
@@ -73,7 +72,7 @@ public class HashTableBucket implements IBucket {
     }
 
     protected int genHashTableSize(Integer keysCount) {
-        double antiCollisionFactor = (12d + (double)((rnd.nextInt() & Integer.MAX_VALUE) % 9d)) / 10d;
+        double antiCollisionFactor = (12d + (RandomSiaod.nextInt() % 9d)) / 10d;
         return (int) (antiCollisionFactor * Math.pow(keysCount, 2));
     }
 
@@ -111,6 +110,10 @@ public class HashTableBucket implements IBucket {
             hashes.add(hash);
         }
         return false;
+    }
+
+    protected IUniversalHashFunction getHashFunction(){
+        return this.universalHashFunction;
     }
 
 }

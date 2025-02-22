@@ -6,6 +6,7 @@ import com.itmo.siaod.exceptions.TooBigNumberException;
 import com.itmo.siaod.hash_functions.UniversalLinearHashFunction;
 import com.itmo.siaod.hash_tables.buckets.HashTableBucket;
 import com.itmo.siaod.hash_tables.buckets.SimpleBucket;
+import com.itmo.siaod.utils.RandomSiaod;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,6 @@ import java.util.Random;
 public class HashTableSiaod implements IHashTableSiaod {
 
     private IUniversalHashFunction hashFunction;
-    private Random rnd;
     private Integer hashTableSize;
     public ArrayList<IBucket> buckets;
 
@@ -23,8 +23,7 @@ public class HashTableSiaod implements IHashTableSiaod {
             throw new RuntimeException("No possible keys passed");
         int allPossibleKeysCount = allPossibleKeys.size();
 
-        this.rnd = new Random();
-        this.hashTableSize = (12 + (rnd.nextInt() & Integer.MAX_VALUE) % 9) / 10 * allPossibleKeysCount;
+        this.hashTableSize = (12 + RandomSiaod.nextInt() % 9) / 10 * allPossibleKeysCount;
         this.hashFunction = new UniversalLinearHashFunction(allPossibleKeys, this.hashTableSize);
 
         initializeFirstLayer(allPossibleKeys);

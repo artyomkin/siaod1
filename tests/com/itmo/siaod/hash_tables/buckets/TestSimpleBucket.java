@@ -27,9 +27,9 @@ public class TestSimpleBucket {
     @Test
     public void testMultipleValues(){
         SimpleBucket simpleBucket = new SimpleBucket();
-        simpleBucket.put(1, 2);
-        simpleBucket.put(2, 3);
-        simpleBucket.put(3, 4);
+        simpleBucket.putKey(1, 2);
+        simpleBucket.putKey(2, 3);
+        simpleBucket.putKey(3, 4);
         assertThrows(CollisionException.class, () -> simpleBucket.get(1));
         assertEquals(simpleBucket.getSize(), 3);
         assertEquals(simpleBucket.getVals().size(), 3);
@@ -41,7 +41,7 @@ public class TestSimpleBucket {
         simpleBucket.put(2, 3);
         simpleBucket.put(3, 4);
         simpleBucket.resetValues();
-        assertEquals(simpleBucket.getSize(), 3);
+        assertEquals(simpleBucket.getSize(), 0);
     }
 
 }

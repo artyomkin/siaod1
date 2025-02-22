@@ -1,26 +1,25 @@
 package com.itmo.siaod.hash_functions;
 
 import com.itmo.siaod.exceptions.TooBigNumberException;
+import com.itmo.siaod.utils.RandomSiaod;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class TestUniversalLinearHashFunction {
     UniversalLinearHashFunction function;
-    Random rnd = new Random();
     List<Integer> possibleKeys;
     int hashTableSize;
 
     @Before
     public void setup() throws TooBigNumberException {
         this.possibleKeys = new ArrayList<>();
-        int possibleKeysSize = (rnd.nextInt() & Integer.MAX_VALUE) % 1000;
+        int possibleKeysSize = RandomSiaod.nextInt() % 1000;
         for (int i = 0; i < possibleKeysSize; i++){
-            this.possibleKeys.add((rnd.nextInt() & Integer.MAX_VALUE) % 1_000_000);
+            this.possibleKeys.add(RandomSiaod.nextInt() % 1_000_000);
         }
         this.hashTableSize = possibleKeysSize * 2;
         this.function = new UniversalLinearHashFunction(possibleKeys, this.hashTableSize);
@@ -40,5 +39,22 @@ public class TestUniversalLinearHashFunction {
         for (Integer key : possibleKeys){
             assertTrue(this.function.hash(key) < this.hashTableSize);
         }
+    }
+
+    @Test
+    public void testShuffle() throws TooBigNumberException {
+        int MAX_COLLISIONS_CNT = 2;
+        int collisionsCnt = 0;
+        int attempts = 5;
+        int key = 10;
+        for (int i = 0; i < attempts; i++){
+            long oldval = function.hash(key);
+            function.shuffleCoefficients();
+            long newVal = function.hash(key);
+            if (oldval == newVal){
+                collisionsCnt++;
+            }
+        }
+        assertTrue(collisionsCnt <= MAX_COLLISIONS_CNT);
     }
 }

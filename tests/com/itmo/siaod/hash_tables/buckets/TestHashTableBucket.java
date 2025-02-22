@@ -1,29 +1,32 @@
 package com.itmo.siaod.hash_tables.buckets;
 
 import com.itmo.siaod.exceptions.TooBigNumberException;
+import com.itmo.siaod.hash_functions.UniversalLinearHashFunction;
+import com.itmo.siaod.hash_tables.HashTableSiaod;
+import com.itmo.siaod.hash_tables.IUniversalHashFunction;
+import com.itmo.siaod.utils.RandomSiaod;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class TestHashTableBucket {
 
     ArrayList<Integer> possibleKeys;
-    Random rnd = new Random();
     HashTableBucket bucket;
+    SimpleBucket simpleBucket;
 
     @Before
     public void setup() throws TooBigNumberException {
         this.possibleKeys = new ArrayList<>();
-        int possibleKeysSize = (rnd.nextInt() & Integer.MAX_VALUE) % 1000;
+        int possibleKeysSize = RandomSiaod.nextInt() % 1000;
         for (int i = 0; i < possibleKeysSize; i++){
-            this.possibleKeys.add((rnd.nextInt() & Integer.MAX_VALUE) % 1_000_000);
+            this.possibleKeys.add(RandomSiaod.nextInt() % 1_000_000);
         }
-        SimpleBucket simpleBucket = new SimpleBucket();
+        this.simpleBucket = new SimpleBucket();
         for (Integer elem : this.possibleKeys) {
-            simpleBucket.put(elem, elem);
+            simpleBucket.putKey(elem, elem);
         }
 
         this.bucket = new HashTableBucket(simpleBucket);
@@ -32,5 +35,54 @@ public class TestHashTableBucket {
     @Test
     public void testIsSimple(){
         assertFalse(this.bucket.isSimple());
+    }
+
+    @Test
+    public void testGenHashTableSize() throws TooBigNumberException {
+        int hashTableSize = bucket.genHashTableSize(possibleKeys.size());
+        assertTrue(hashTableSize < 2 * Math.pow(possibleKeys.size(), 2));
+    }
+
+    @Test
+    public void testDoesFunctionMakeCollisions() throws TooBigNumberException {
+        UniversalLinearHashFunction function = new UniversalLinearHashFunction(possibleKeys, possibleKeys.size() - 1);
+        assertTrue(bucket.doesFunctionMakeCollisions(possibleKeys, function));
+    }
+
+    @Test
+    public void testChooseFunction() throws TooBigNumberException {
+        IUniversalHashFunction function = bucket.chooseHashFunction(bucket.genHashTableSize(possibleKeys.size()), possibleKeys);
+        assertFalse(bucket.doesFunctionMakeCollisions(possibleKeys, function));
+    }
+
+    @Test
+    public void testInitHashTable() throws TooBigNumberException {
+        bucket.initHashTable(possibleKeys);
+        assertFalse(bucket.doesFunctionMakeCollisions(possibleKeys, bucket.getHashFunction()));
+    }
+
+    @Test
+    public void testResetValues() throws TooBigNumberException {
+        this.bucket.put(possibleKeys.getFirst(), 13);
+        this.bucket.put(possibleKeys.getLast(), 14);
+        assertNotNull(bucket.get(possibleKeys.getFirst()));
+        assertNotNull(bucket.get(possibleKeys.getLast()));
+        bucket.resetValues();
+        assertNull(bucket.get(possibleKeys.getFirst()));
+        assertNull(bucket.get(possibleKeys.getLast()));
+    }
+
+    @Test
+    public void testPutAndGet() throws TooBigNumberException {
+        this.bucket.put(possibleKeys.getFirst(), 10);
+        assertEquals((int)this.bucket.get(possibleKeys.getFirst()), 10);
+    }
+
+    @Test
+    public void testDelete() throws TooBigNumberException {
+        this.bucket.put(possibleKeys.getFirst(), 10);
+        assertEquals((int)this.bucket.get(possibleKeys.getFirst()), 10);
+        this.bucket.delete(possibleKeys.getFirst());
+        assertNull(this.bucket.get(possibleKeys.getFirst()));
     }
 }
