@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleBucket.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.perfect_hash.hash_tables.buckets</a> &gt; <span class="el_source">SimpleBucket.java</span></div><h1>SimpleBucket.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.perfect_hash.hash_tables.buckets;
+
+import com.itmo.siaod.perfect_hash.exceptions.CollisionException;
+import com.itmo.siaod.perfect_hash.hash_tables.ISimpleBucket;
+
+import java.util.ArrayList;
+
+public class SimpleBucket implements ISimpleBucket {
+
+    private ArrayList&lt;Integer&gt; values;
+
+<span class="fc" id="L12">    public SimpleBucket() {</span>
+<span class="fc" id="L13">        this.values = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L14">    }</span>
+
+<span class="fc" id="L16">    public SimpleBucket(Integer initialKey){</span>
+<span class="fc" id="L17">        this.values = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L18">        this.values.add(initialKey);</span>
+<span class="fc" id="L19">    }</span>
+
+    @Override
+    public ArrayList&lt;Integer&gt; getVals() {
+<span class="fc" id="L23">        return this.values;</span>
+    }
+
+    @Override
+    public boolean putKey(Integer key, Integer val) {
+<span class="fc" id="L28">        this.values.add(val);</span>
+<span class="fc" id="L29">        return true;</span>
+    }
+
+    @Override
+    public boolean put(Integer key, Integer val) {
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        if (this.values.isEmpty()) {</span>
+<span class="fc" id="L35">            this.values.add(val);</span>
+        } else {
+<span class="fc" id="L37">            this.values.set(0, val);</span>
+        }
+<span class="fc" id="L39">        return true;</span>
+    }
+
+    @Override
+    public Integer get(Integer key) throws CollisionException {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (this.values.isEmpty()) return null;</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (this.values.size() &gt; 1) {</span>
+<span class="fc" id="L46">            throw new CollisionException(&quot;The bucket has collisions.&quot;);</span>
+        }
+<span class="fc" id="L48">        return this.values.getFirst();</span>
+    }
+
+    @Override
+    public int getSize() {
+<span class="fc" id="L53">        return this.values.size();</span>
+    }
+
+    @Override
+    public boolean delete(Integer key) {
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (this.values.isEmpty()) return false;</span>
+<span class="fc" id="L59">        this.values.clear();</span>
+<span class="fc" id="L60">        return true;</span>
+    }
+
+    @Override
+    public void resetValues() {
+<span class="fc" id="L65">        this.values.clear();</span>
+<span class="fc" id="L66">    }</span>
+
+    @Override
+    public boolean isSimple() {
+<span class="fc" id="L70">        return true;</span>
+    }
+
+    @Override
+    public String toString(){
+<span class="nc" id="L75">        return this.values.toString();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

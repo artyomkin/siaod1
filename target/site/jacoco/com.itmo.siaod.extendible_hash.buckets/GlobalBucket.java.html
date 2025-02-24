@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GlobalBucket.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.extendible_hash.buckets</a> &gt; <span class="el_source">GlobalBucket.java</span></div><h1>GlobalBucket.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.extendible_hash.buckets;
+
+import com.itmo.siaod.extendible_hash.buckets.entries.Entry;
+import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
+import com.itmo.siaod.extendible_hash.hash_tables.IGlobalBucket;
+
+import java.util.ArrayList;
+
+public class GlobalBucket implements IGlobalBucket  {
+
+    private ILocalBucket[] localBuckets;
+    private Short depth;
+    private Integer size;
+
+<span class="nc" id="L15">    public GlobalBucket(){</span>
+<span class="nc" id="L16">        this.depth = 2;</span>
+<span class="nc" id="L17">        this.size = (int) Math.pow(2, depth);</span>
+<span class="nc" id="L18">        this.localBuckets = new LocalBucket[size];</span>
+<span class="nc" id="L19">    }</span>
+
+    private void extend() {
+<span class="nc" id="L22">        incrementDepth();</span>
+<span class="nc" id="L23">        ILocalBucket[] newLocalBuckets = new LocalBucket[size];</span>
+<span class="nc bnc" id="L24" title="All 2 branches missed.">        for (int i = 0; i &lt; this.localBuckets.length; i++) {</span>
+<span class="nc" id="L25">            newLocalBuckets[i] = this.localBuckets[i];</span>
+        }
+<span class="nc" id="L27">    }</span>
+
+    private void incrementDepth() {
+<span class="nc" id="L30">        depth++;</span>
+<span class="nc" id="L31">        this.size = (int) Math.pow(2, depth);</span>
+<span class="nc" id="L32">    }</span>
+
+    private Integer hash(Integer n){
+<span class="nc" id="L35">        return this.getLastBits(n, this.depth);</span>
+    }
+
+    private Integer getLastBits(Integer n, Short bitsCnt){
+<span class="nc" id="L39">        return n &amp; ((int)Math.pow(2, bitsCnt) - 1);</span>
+    }
+
+    private boolean tryRedistributeBucket(Integer index) {
+<span class="nc" id="L43">        ILocalBucket oldBucket = this.localBuckets[index];</span>
+<span class="nc bnc" id="L44" title="All 2 branches missed.">        if (oldBucket.depth() &gt;= this.depth) return false;</span>
+
+<span class="nc" id="L46">        this.localBuckets[index] = new LocalBucket((short) (oldBucket.depth()+1));</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">        for (IEntry entry : oldBucket.getAll()) {</span>
+<span class="nc" id="L48">            this.put(entry.getKey(), entry.getValue());</span>
+<span class="nc" id="L49">        }</span>
+<span class="nc" id="L50">        return true;</span>
+    }
+
+    private void initLocalBucket(Integer index) {
+<span class="nc" id="L54">        this.localBuckets[index] = new LocalBucket(depth);</span>
+<span class="nc" id="L55">    }</span>
+
+    @Override
+    public boolean put(Integer key, Integer value) {
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        if (key == null) return false;</span>
+<span class="nc" id="L60">        int index = this.hash(key);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (this.localBuckets[index] == null) this.initLocalBucket(index);</span>
+
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (!this.localBuckets[index].put(key, value)){</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">            if (!this.tryRedistributeBucket(index)){</span>
+<span class="nc" id="L65">                this.extend();</span>
+            }
+<span class="nc" id="L67">            return this.put(key, value);</span>
+        }
+<span class="nc" id="L69">        return true;</span>
+    }
+
+    @Override
+    public Integer get(Integer key) {
+<span class="nc" id="L74">        int index = this.hash(key);</span>
+<span class="nc" id="L75">        ILocalBucket localBucket = this.localBuckets[index];</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        return localBucket != null ? localBucket.get(key) : null;</span>
+    }
+
+    @Override
+    public boolean delete(Integer key) {
+<span class="nc" id="L81">        int index = this.hash(key);</span>
+<span class="nc" id="L82">        ILocalBucket localBucket = this.localBuckets[index];</span>
+<span class="nc bnc" id="L83" title="All 4 branches missed.">        return localBucket != null &amp;&amp; localBucket.delete(key);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

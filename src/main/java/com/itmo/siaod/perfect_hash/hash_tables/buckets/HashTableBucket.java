@@ -86,9 +86,15 @@ public class HashTableBucket implements IBucket {
     }
 
     protected IUniversalHashFunction chooseHashFunction(Integer hashTableSize, ArrayList<Integer> keysArr) throws TooBigNumberException {
+        final int MAX_ATTEMPTS = 100;
+        int attempts = 0;
         IUniversalHashFunction function = null;
         while (doesFunctionMakeCollisions(keysArr, function)){
+            if (attempts > MAX_ATTEMPTS){
+                throw new RuntimeException("Cannot choose hash function.");
+            }
             function = shuffleFunction(keysArr, hashTableSize);
+            attempts++;
         }
         return function;
     }
@@ -112,6 +118,10 @@ public class HashTableBucket implements IBucket {
 
     protected IUniversalHashFunction getHashFunction(){
         return this.universalHashFunction;
+    }
+
+    public ArrayList<Integer> getHashTable(){
+        return this.hashTable;
     }
 
 }

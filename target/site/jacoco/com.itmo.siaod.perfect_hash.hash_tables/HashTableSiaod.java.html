@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HashTableSiaod.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.perfect_hash.hash_tables</a> &gt; <span class="el_source">HashTableSiaod.java</span></div><h1>HashTableSiaod.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.perfect_hash.hash_tables;
+
+import com.itmo.siaod.perfect_hash.IHashTableSiaod;
+import com.itmo.siaod.perfect_hash.exceptions.CollisionException;
+import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
+import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearHashFunction;
+import com.itmo.siaod.perfect_hash.hash_tables.buckets.HashTableBucket;
+import com.itmo.siaod.perfect_hash.hash_tables.buckets.SimpleBucket;
+import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class HashTableSiaod implements IHashTableSiaod {
+
+    private IUniversalHashFunction hashFunction;
+    private Integer hashTableSize;
+    public ArrayList&lt;IBucket&gt; buckets;
+    public List&lt;Integer&gt; possibleKeys;
+
+<span class="nc" id="L21">    public HashTableSiaod(List&lt;Integer&gt; allPossibleKeys) throws TooBigNumberException {</span>
+<span class="nc bnc" id="L22" title="All 2 branches missed.">        if (allPossibleKeys.isEmpty())</span>
+<span class="nc" id="L23">            throw new RuntimeException(&quot;No possible keys passed&quot;);</span>
+
+<span class="nc" id="L25">        List&lt;Integer&gt; allUniqPossibleKeys = allPossibleKeys.stream().distinct().toList();</span>
+<span class="nc" id="L26">        int allUniqPossibleKeysCount = allUniqPossibleKeys.size();</span>
+<span class="nc" id="L27">        this.possibleKeys = allUniqPossibleKeys;</span>
+
+<span class="nc" id="L29">        this.hashTableSize = (12 + RandomSiaod.nextInt() % 9) / 10 * allUniqPossibleKeysCount;</span>
+<span class="nc" id="L30">        this.hashFunction = new UniversalLinearHashFunction(allUniqPossibleKeys, this.hashTableSize);</span>
+
+<span class="nc" id="L32">        initializeFirstLayer(allUniqPossibleKeys);</span>
+<span class="nc" id="L33">        initializeSecondLayer();</span>
+<span class="nc" id="L34">        resetBuckets();</span>
+<span class="nc" id="L35">    }</span>
+
+    protected void initializeFirstLayer(List&lt;Integer&gt; allPossibleKeys) throws TooBigNumberException {
+<span class="nc" id="L38">        this.buckets = new ArrayList&lt;&gt;(this.hashTableSize);</span>
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        for (int i = 0; i &lt; this.hashTableSize; i++){</span>
+<span class="nc" id="L40">            this.buckets.add(null);</span>
+        }
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        for (Integer key : allPossibleKeys) {</span>
+<span class="nc" id="L43">            addKey(key);</span>
+<span class="nc" id="L44">        }</span>
+<span class="nc" id="L45">    }</span>
+
+    protected void addKey(Integer key) throws TooBigNumberException {
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (key == null) return;</span>
+
+<span class="nc" id="L50">        Integer index = Math.toIntExact(this.hashFunction.hash(key));</span>
+<span class="nc bnc" id="L51" title="All 2 branches missed.">        if (this.buckets.get(index) == null) {</span>
+<span class="nc" id="L52">            IBucket simpleBucket = new SimpleBucket(key);</span>
+<span class="nc" id="L53">            this.buckets.set(index, simpleBucket);</span>
+<span class="nc" id="L54">        } else {</span>
+<span class="nc" id="L55">            this.buckets.get(index).putKey(key, key);</span>
+        }
+<span class="nc" id="L57">    }</span>
+
+    protected void initializeSecondLayer() throws TooBigNumberException {
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        for (int i = 0; i &lt; this.buckets.size(); i++){</span>
+<span class="nc bnc" id="L61" title="All 6 branches missed.">            if (this.buckets.get(i) != null &amp;&amp; this.buckets.get(i).isSimple() &amp;&amp; this.buckets.get(i).getSize() &gt; 1) {</span>
+<span class="nc" id="L62">                this.buckets.set(i, simpleToHashTableBucket((ISimpleBucket) this.buckets.get(i)));</span>
+            }
+        }
+<span class="nc" id="L65">    }</span>
+
+    protected HashTableBucket simpleToHashTableBucket(ISimpleBucket simpleBucket) throws TooBigNumberException {
+<span class="nc" id="L68">        return new HashTableBucket(simpleBucket);</span>
+    }
+
+    protected void resetBuckets(){
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        for (IBucket bucket : buckets) {</span>
+<span class="nc bnc" id="L73" title="All 2 branches missed.">            if (bucket != null) {</span>
+<span class="nc" id="L74">                bucket.resetValues();</span>
+            }
+<span class="nc" id="L76">        }</span>
+<span class="nc" id="L77">    }</span>
+
+    @Override
+    public boolean put(Integer key, Integer val) throws TooBigNumberException {
+<span class="nc" id="L81">        Integer index = Math.toIntExact(this.hashFunction.hash(key));</span>
+<span class="nc" id="L82">        return this.buckets.get(index).put(key, val);</span>
+    }
+
+    @Override
+    public Integer get(Integer key) throws CollisionException, TooBigNumberException {
+<span class="nc" id="L87">        Integer index = Math.toIntExact(this.hashFunction.hash(key));</span>
+<span class="nc" id="L88">        return this.buckets.get(index).get(key);</span>
+    }
+
+    @Override
+    public boolean delete(Integer key) throws TooBigNumberException {
+<span class="nc" id="L93">        Integer index = Math.toIntExact(this.hashFunction.hash(key));</span>
+<span class="nc" id="L94">        return this.buckets.get(index).delete(key);</span>
+    }
+
+    @Override
+    public String toString(){
+<span class="nc" id="L99">        String res = &quot;&quot;;</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">        for (int i = 0; i &lt; this.buckets.size(); i++) {</span>
+<span class="nc bnc" id="L101" title="All 2 branches missed.">            if (this.buckets.get(i) == null) {</span>
+<span class="nc" id="L102">                res = res + &quot; &quot; + i + &quot;: null&quot; + &quot;\n &quot;;</span>
+            } else {
+<span class="nc bnc" id="L104" title="All 2 branches missed.">                res = res + &quot; &quot; + (this.buckets.get(i).isSimple() ? &quot;simple&quot; : &quot;hashTable&quot;) + &quot; &quot; + i + &quot;: &quot; + this.buckets.get(i).toString() + &quot;\n &quot;;</span>
+            }
+        }
+<span class="nc" id="L107">        return res;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

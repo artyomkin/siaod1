@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProfilingReport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.perfect_hash.profiler</a> &gt; <span class="el_source">ProfilingReport.java</span></div><h1>ProfilingReport.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.perfect_hash.profiler;
+
+import java.util.ArrayList;
+
+<span class="nc" id="L5">public class ProfilingReport {</span>
+    public Double memoryUsedMB;
+    public Double elapsedTimeSeconds;
+    public Integer keysCount;
+    public Integer maxKey;
+
+    public static void print(ArrayList&lt;ProfilingReport&gt; reps) {
+<span class="nc" id="L12">        System.out.format(</span>
+                &quot;%20s%20s%20s%20s&quot;,
+                &quot;Keys count&quot;,
+                &quot;Maximum key&quot;,
+                &quot;Memory used (MB)&quot;,
+                &quot;Elapsed Time (sec)&quot;
+        );
+<span class="nc bnc" id="L19" title="All 2 branches missed.">        for (ProfilingReport profilingReport : reps){</span>
+<span class="nc" id="L20">            System.out.println();</span>
+<span class="nc" id="L21">            System.out.format(</span>
+                    &quot;%20d%20d%20f%20f&quot;,
+                    profilingReport.keysCount,
+                    profilingReport.maxKey,
+                    profilingReport.memoryUsedMB,
+                    profilingReport.elapsedTimeSeconds
+            );
+<span class="nc" id="L28">        }</span>
+<span class="nc" id="L29">    }</span>
+
+    public static ProfilingReport toAvg(ArrayList&lt;ProfilingReport&gt; reps){
+<span class="nc" id="L32">        ProfilingReport rep = new ProfilingReport();</span>
+<span class="nc" id="L33">        rep.memoryUsedMB = reps.stream().mapToDouble(report -&gt; report.memoryUsedMB).average().getAsDouble();</span>
+<span class="nc" id="L34">        rep.elapsedTimeSeconds = reps.stream().mapToDouble(report -&gt; report.elapsedTimeSeconds).average().getAsDouble();</span>
+<span class="nc" id="L35">        rep.keysCount = (int) reps.stream().mapToInt(report -&gt; report.keysCount).average().getAsDouble();</span>
+<span class="nc" id="L36">        rep.maxKey = (int) reps.stream().mapToInt(report -&gt; report.maxKey).average().getAsDouble();</span>
+<span class="nc" id="L37">        return rep;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

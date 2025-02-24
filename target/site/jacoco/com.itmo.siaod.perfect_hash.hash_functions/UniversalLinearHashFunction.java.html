@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UniversalLinearHashFunction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.perfect_hash.hash_functions</a> &gt; <span class="el_source">UniversalLinearHashFunction.java</span></div><h1>UniversalLinearHashFunction.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.perfect_hash.hash_functions;
+
+import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
+import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
+import com.itmo.siaod.perfect_hash.prime_numbers.IPrimeGenerator;
+import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
+
+import java.util.*;
+
+public class UniversalLinearHashFunction implements IUniversalHashFunction {
+    private Long a;
+    private Long b;
+    private Long p;
+    private Long m;
+
+<span class="fc" id="L16">    public UniversalLinearHashFunction(List&lt;Integer&gt; allPossibleKeys, Integer hashTableSize) throws TooBigNumberException {</span>
+<span class="fc" id="L17">        int maxPossibleKey = allPossibleKeys.stream().max(Comparator.naturalOrder()).get();</span>
+
+<span class="fc" id="L19">        p = IPrimeGenerator.findNextPrime((long) maxPossibleKey);</span>
+<span class="pc bpc" id="L20" title="2 of 4 branches missed.">        if (p == null || p &lt; 0){</span>
+<span class="nc" id="L21">            throw new TooBigNumberException(&quot;p number is negative.&quot;);</span>
+        }
+<span class="fc" id="L23">        m = (long) hashTableSize;</span>
+
+<span class="fc" id="L25">        shuffleCoefficients();</span>
+<span class="fc" id="L26">    }</span>
+
+    @Override
+    public Long hash(Integer key) throws TooBigNumberException {
+<span class="fc" id="L30">        Long res = ((a * key + b) % p) % m;</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">        if (res &lt; 0)</span>
+<span class="nc" id="L32">            throw new TooBigNumberException(&quot;hash is negative.&quot;);</span>
+<span class="fc" id="L33">        return res;</span>
+    }
+
+    protected void shuffleCoefficients() throws TooBigNumberException {
+<span class="fc" id="L37">        a = RandomSiaod.nextInt() % p;</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (a == 0){</span>
+<span class="fc" id="L39">            a = 1L;</span>
+        }
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">        if (a &lt; 0){</span>
+<span class="nc" id="L42">            throw new TooBigNumberException(&quot;a number is negative.&quot;);</span>
+        }
+<span class="fc" id="L44">        b = RandomSiaod.nextInt() % p;</span>
+<span class="pc bpc" id="L45" title="1 of 2 branches missed.">        if (b &lt; 0){</span>
+<span class="nc" id="L46">            throw new TooBigNumberException(&quot;b number is negative.&quot;);</span>
+        }
+<span class="fc" id="L48">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

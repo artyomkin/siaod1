@@ -21,13 +21,15 @@ public class HashTableSiaod implements IHashTableSiaod {
     public HashTableSiaod(List<Integer> allPossibleKeys) throws TooBigNumberException {
         if (allPossibleKeys.isEmpty())
             throw new RuntimeException("No possible keys passed");
-        int allPossibleKeysCount = allPossibleKeys.size();
-        this.possibleKeys = allPossibleKeys;
 
-        this.hashTableSize = (12 + RandomSiaod.nextInt() % 9) / 10 * allPossibleKeysCount;
-        this.hashFunction = new UniversalLinearHashFunction(allPossibleKeys, this.hashTableSize);
+        List<Integer> allUniqPossibleKeys = allPossibleKeys.stream().distinct().toList();
+        int allUniqPossibleKeysCount = allUniqPossibleKeys.size();
+        this.possibleKeys = allUniqPossibleKeys;
 
-        initializeFirstLayer(allPossibleKeys);
+        this.hashTableSize = (12 + RandomSiaod.nextInt() % 9) / 10 * allUniqPossibleKeysCount;
+        this.hashFunction = new UniversalLinearHashFunction(allUniqPossibleKeys, this.hashTableSize);
+
+        initializeFirstLayer(allUniqPossibleKeys);
         initializeSecondLayer();
         resetBuckets();
     }
@@ -62,7 +64,7 @@ public class HashTableSiaod implements IHashTableSiaod {
         }
     }
 
-    protected IBucket simpleToHashTableBucket(ISimpleBucket simpleBucket) throws TooBigNumberException {
+    protected HashTableBucket simpleToHashTableBucket(ISimpleBucket simpleBucket) throws TooBigNumberException {
         return new HashTableBucket(simpleBucket);
     }
 

@@ -3,8 +3,6 @@ package com.itmo.siaod.perfect_hash.hash_tables.buckets;
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
 import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearHashFunction;
 import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
-import com.itmo.siaod.perfect_hash.hash_tables.buckets.HashTableBucket;
-import com.itmo.siaod.perfect_hash.hash_tables.buckets.SimpleBucket;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +21,11 @@ public class TestHashTableBucket {
         this.possibleKeys = new ArrayList<>();
         int possibleKeysSize = RandomSiaod.nextInt() % 1000;
         for (int i = 0; i < possibleKeysSize; i++){
-            this.possibleKeys.add(RandomSiaod.nextInt() % 1_000_000);
+            int key = RandomSiaod.nextInt() % 1_000_000;
+            while (possibleKeys.contains(key)){
+                key = RandomSiaod.nextInt() % 1_000_000;
+            }
+            this.possibleKeys.add(key);
         }
         this.simpleBucket = new SimpleBucket();
         for (Integer elem : this.possibleKeys) {
