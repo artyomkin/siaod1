@@ -1,7 +1,7 @@
 package com.itmo.siaod.perfect_hash.hash_functions;
 
-import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
+import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
 import com.itmo.siaod.perfect_hash.prime_numbers.IPrimeGenerator;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
 

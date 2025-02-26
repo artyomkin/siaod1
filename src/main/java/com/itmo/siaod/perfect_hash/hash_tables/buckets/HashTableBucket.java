@@ -1,9 +1,9 @@
 package com.itmo.siaod.perfect_hash.hash_tables.buckets;
 
+import com.itmo.siaod.perfect_hash.hash_tables.ISimpleBucket;
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
 import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearHashFunction;
 import com.itmo.siaod.perfect_hash.hash_tables.IBucket;
-import com.itmo.siaod.perfect_hash.hash_tables.ISimpleBucket;
 import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
 

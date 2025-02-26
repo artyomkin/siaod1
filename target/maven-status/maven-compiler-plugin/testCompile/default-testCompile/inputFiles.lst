@@ -1,0 +1,13 @@
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/perfect_hash/exceptions/TestCollisionException.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/perfect_hash/hash_tables/TestHashTableSiaod.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/extendible_hash/hash_tables/TestHashTableSiaod.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/perfect_hash/prime_numbers/TestPrimeGenerator.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/perfect_hash/utils/TestRandomSiaod.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/extendible_hash/buckets/TestGlobalBucket.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/perfect_hash/hash_tables/buckets/TestHashTableBucket.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/perfect_hash/prime_numbers/TestDeterministicMillerRabinTest.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/perfect_hash/hash_functions/TestUniversalLinearHashFunction.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/extendible_hash/buckets/entries/TestEntry.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/perfect_hash/exceptions/TestTooBigNumberException.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/extendible_hash/buckets/TestLocalBucket.java
+/home/artyom/IdeaProjects/siaod/lab1/src/test/java/com/itmo/siaod/perfect_hash/hash_tables/buckets/TestSimpleBucket.java

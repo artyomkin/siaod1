@@ -7,23 +7,23 @@ public class HashTableSiaod implements IHashTableSiaod {
 
     private IGlobalBucket globalBucket;
 
-<span class="nc" id="L10">    public HashTableSiaod(){</span>
-<span class="nc" id="L11">        this.globalBucket = new GlobalBucket();</span>
-<span class="nc" id="L12">    }</span>
+<span class="fc" id="L10">    public HashTableSiaod(){</span>
+<span class="fc" id="L11">        this.globalBucket = new GlobalBucket();</span>
+<span class="fc" id="L12">    }</span>
 
     @Override
     public boolean put(Integer key, Integer value) {
-<span class="nc" id="L16">        return this.globalBucket.put(key, value);</span>
+<span class="fc" id="L16">        return this.globalBucket.put(key, value);</span>
     }
 
     @Override
     public Integer get(Integer key) {
-<span class="nc" id="L21">        return this.globalBucket.get(key);</span>
+<span class="fc" id="L21">        return this.globalBucket.get(key);</span>
     }
 
     @Override
     public boolean delete(Integer key) {
-<span class="nc" id="L26">        return this.globalBucket.delete(key);</span>
+<span class="fc" id="L26">        return this.globalBucket.delete(key);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,16 +1,13 @@
 package com.itmo.siaod.extendible_hash.buckets;
 
-import com.itmo.siaod.extendible_hash.buckets.entries.Entry;
 import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
 import com.itmo.siaod.extendible_hash.hash_tables.IGlobalBucket;
 
-import java.util.ArrayList;
-
 public class GlobalBucket implements IGlobalBucket  {
 
-    private ILocalBucket[] localBuckets;
-    private Short depth;
-    private Integer size;
+    protected ILocalBucket[] localBuckets;
+    protected Short depth;
+    protected Integer size;
 
     public GlobalBucket(){
         this.depth = 2;
@@ -18,28 +15,27 @@ public class GlobalBucket implements IGlobalBucket  {
         this.localBuckets = new LocalBucket[size];
     }
 
-    private void extend() {
+    protected void extend() {
         incrementDepth();
         ILocalBucket[] newLocalBuckets = new LocalBucket[size];
-        for (int i = 0; i < this.localBuckets.length; i++) {
-            newLocalBuckets[i] = this.localBuckets[i];
-        }
+        System.arraycopy(this.localBuckets, 0, newLocalBuckets, 0, this.localBuckets.length);
+        this.localBuckets = newLocalBuckets;
     }
 
-    private void incrementDepth() {
+    protected void incrementDepth() {
         depth++;
         this.size = (int) Math.pow(2, depth);
     }
 
-    private Integer hash(Integer n){
+    protected Integer hash(Integer n){
         return this.getLastBits(n, this.depth);
     }
 
-    private Integer getLastBits(Integer n, Short bitsCnt){
+    protected Integer getLastBits(Integer n, Short bitsCnt){
         return n & ((int)Math.pow(2, bitsCnt) - 1);
     }
 
-    private boolean tryRedistributeBucket(Integer index) {
+    protected boolean tryRedistributeBucket(Integer index) {
         ILocalBucket oldBucket = this.localBuckets[index];
         if (oldBucket.depth() >= this.depth) return false;
 
@@ -50,7 +46,7 @@ public class GlobalBucket implements IGlobalBucket  {
         return true;
     }
 
-    private void initLocalBucket(Integer index) {
+    protected void initLocalBucket(Integer index) {
         this.localBuckets[index] = new LocalBucket(depth);
     }
 

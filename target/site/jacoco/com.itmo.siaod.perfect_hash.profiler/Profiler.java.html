@@ -9,83 +9,84 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.openjdk.jol.info.ClassLayout;
 
 
-<span class="nc" id="L15">public class Profiler {</span>
+<span class="nc" id="L16">public class Profiler {</span>
 
-<span class="nc" id="L17">    private OperatingSystemMXBean operatingSystemBean = ManagementFactory.getOperatingSystemMXBean();</span>
+<span class="nc" id="L18">    private OperatingSystemMXBean operatingSystemBean = ManagementFactory.getOperatingSystemMXBean();</span>
 
     public long getMemoryUsage(Object o){
-<span class="nc" id="L20">        return ClassLayout.parseInstance(o).instanceSize();</span>
+<span class="nc" id="L21">        return ClassLayout.parseInstance(o).instanceSize();</span>
     }
 
     public HashTableSiaod createHashTableSiaod(Integer keysCount, Integer maxKey) throws TooBigNumberException {
 
-<span class="nc" id="L25">        ArrayList&lt;Integer&gt; possibleKeys = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L26">        int possibleKeysSize = RandomSiaod.nextInt() % keysCount + 1;</span>
-<span class="nc bnc" id="L27" title="All 2 branches missed.">        for (int i = 0; i &lt; possibleKeysSize; i++) {</span>
-<span class="nc" id="L28">            possibleKeys.add(RandomSiaod.nextInt() % maxKey);</span>
+<span class="nc" id="L26">        ArrayList&lt;Integer&gt; possibleKeys = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L27">        int possibleKeysSize = RandomSiaod.nextInt() % keysCount + 1;</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">        for (int i = 0; i &lt; possibleKeysSize; i++) {</span>
+<span class="nc" id="L29">            possibleKeys.add(RandomSiaod.nextInt() % maxKey);</span>
         }
-<span class="nc" id="L30">        List&lt;Integer&gt; uniqPossibleKeys = possibleKeys.stream().distinct().toList();</span>
-<span class="nc" id="L31">        return new HashTableSiaod(uniqPossibleKeys);</span>
+<span class="nc" id="L31">        List&lt;Integer&gt; uniqPossibleKeys = possibleKeys.stream().distinct().toList();</span>
+<span class="nc" id="L32">        return new HashTableSiaod(uniqPossibleKeys);</span>
 
     }
 
     public ProfilingReport profileHashTableSiaodBuild(Integer keysCount, Integer maxKey) throws TooBigNumberException {
-<span class="nc" id="L36">        long timeStart = System.currentTimeMillis();</span>
-<span class="nc" id="L37">        HashTableSiaod hashTableSiaod = createHashTableSiaod(keysCount, maxKey);</span>
-<span class="nc" id="L38">        long timeEnd = System.currentTimeMillis();</span>
+<span class="nc" id="L37">        long timeStart = System.currentTimeMillis();</span>
+<span class="nc" id="L38">        HashTableSiaod hashTableSiaod = createHashTableSiaod(keysCount, maxKey);</span>
+<span class="nc" id="L39">        long timeEnd = System.currentTimeMillis();</span>
 
-<span class="nc" id="L40">        com.itmo.siaod.perfect_hash.profiler.ProfilingReport rep = new com.itmo.siaod.perfect_hash.profiler.ProfilingReport();</span>
-<span class="nc" id="L41">        rep.elapsedTimeSeconds = (timeEnd - timeStart) / 1000d;</span>
-<span class="nc" id="L42">        rep.memoryUsedMB = getMemoryUsage(hashTableSiaod.buckets.toArray()) / Math.pow(2, 20);</span>
-<span class="nc" id="L43">        rep.keysCount = keysCount;</span>
-<span class="nc" id="L44">        rep.maxKey = maxKey;</span>
-<span class="nc" id="L45">        return rep;</span>
+<span class="nc" id="L41">        ProfilingReport rep = new ProfilingReport();</span>
+<span class="nc" id="L42">        rep.elapsedTimeSeconds = (timeEnd - timeStart) / 1000d;</span>
+<span class="nc" id="L43">        rep.memoryUsedMB = getMemoryUsage(hashTableSiaod.buckets.toArray()) / Math.pow(2, 20);</span>
+<span class="nc" id="L44">        rep.keysCount = keysCount;</span>
+<span class="nc" id="L45">        rep.maxKey = maxKey;</span>
+<span class="nc" id="L46">        return rep;</span>
     }
 
-    public com.itmo.siaod.perfect_hash.profiler.ProfilingReport profileHashTableSiaodOperations(Integer keysCount, Integer maxKey) throws TooBigNumberException, CollisionException {
-<span class="nc" id="L49">        HashTableSiaod hashTableSiaod = createHashTableSiaod(keysCount, maxKey);</span>
+    public ProfilingReport profileHashTableSiaodOperations(Integer keysCount, Integer maxKey) throws TooBigNumberException, CollisionException {
+<span class="nc" id="L50">        HashTableSiaod hashTableSiaod = createHashTableSiaod(keysCount, maxKey);</span>
 
-<span class="nc" id="L51">        long timeStart = System.currentTimeMillis();</span>
-<span class="nc bnc" id="L52" title="All 2 branches missed.">        for (int i = 0; i &lt; 100_000; i++) {</span>
-<span class="nc" id="L53">            int rndIndex = RandomSiaod.nextInt() % hashTableSiaod.possibleKeys.size();</span>
-<span class="nc" id="L54">            int key = hashTableSiaod.possibleKeys.get(rndIndex);</span>
-<span class="nc" id="L55">            int val = RandomSiaod.nextInt() % 1000 + 1000;</span>
+<span class="nc" id="L52">        long timeStart = System.currentTimeMillis();</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        for (int i = 0; i &lt; 100_000; i++) {</span>
+<span class="nc" id="L54">            int rndIndex = RandomSiaod.nextInt() % hashTableSiaod.possibleKeys.size();</span>
+<span class="nc" id="L55">            int key = hashTableSiaod.possibleKeys.get(rndIndex);</span>
+<span class="nc" id="L56">            int val = RandomSiaod.nextInt() % 1000 + 1000;</span>
 
-<span class="nc" id="L57">            hashTableSiaod.put(key, val);</span>
+<span class="nc" id="L58">            hashTableSiaod.put(key, val);</span>
         }
-<span class="nc" id="L59">        long timeEnd = System.currentTimeMillis();</span>
-<span class="nc" id="L60">        com.itmo.siaod.perfect_hash.profiler.ProfilingReport rep = new com.itmo.siaod.perfect_hash.profiler.ProfilingReport();</span>
-<span class="nc" id="L61">        rep.elapsedTimeSeconds = (timeEnd - timeStart) / 1000d;</span>
-<span class="nc" id="L62">        rep.memoryUsedMB = 0d;</span>
-<span class="nc" id="L63">        rep.keysCount = keysCount;</span>
-<span class="nc" id="L64">        rep.maxKey = maxKey;</span>
-<span class="nc" id="L65">        return rep;</span>
+<span class="nc" id="L60">        long timeEnd = System.currentTimeMillis();</span>
+<span class="nc" id="L61">        ProfilingReport rep = new ProfilingReport();</span>
+<span class="nc" id="L62">        rep.elapsedTimeSeconds = (timeEnd - timeStart) / 1000d;</span>
+<span class="nc" id="L63">        rep.memoryUsedMB = 0d;</span>
+<span class="nc" id="L64">        rep.keysCount = keysCount;</span>
+<span class="nc" id="L65">        rep.maxKey = maxKey;</span>
+<span class="nc" id="L66">        return rep;</span>
     }
 
     public static void profilePerfectHash() throws TooBigNumberException, CollisionException {
-<span class="nc" id="L69">        Profiler profiler = new Profiler();</span>
-<span class="nc" id="L70">        int keysCountInit = 10_000;</span>
-<span class="nc" id="L71">        int maxKeyInit = 10_000;</span>
-<span class="nc" id="L72">        int iterations = 30;</span>
-<span class="nc" id="L73">        int steps = 30;</span>
+<span class="nc" id="L70">        Profiler profiler = new Profiler();</span>
+<span class="nc" id="L71">        int keysCountInit = 10_000;</span>
+<span class="nc" id="L72">        int maxKeyInit = 10_000;</span>
+<span class="nc" id="L73">        int iterations = 30;</span>
+<span class="nc" id="L74">        int steps = 30;</span>
 
-<span class="nc" id="L75">        ArrayList&lt;com.itmo.siaod.perfect_hash.profiler.ProfilingReport&gt; avgReps = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">        for (int i = 1; i &lt; iterations + 1; i++) {</span>
-<span class="nc" id="L77">            int keysCount = keysCountInit * i;</span>
-<span class="nc" id="L78">            int maxKey = maxKeyInit * i;</span>
-<span class="nc" id="L79">            ArrayList&lt;com.itmo.siaod.perfect_hash.profiler.ProfilingReport&gt; iterationReps = new ArrayList&lt;&gt;();</span>
-<span class="nc" id="L80">            System.out.println(iterations - i + &quot; profiling iterations left..&quot;);</span>
-<span class="nc bnc" id="L81" title="All 2 branches missed.">            for (int j = 0; j &lt; steps; j++) {</span>
-<span class="nc" id="L82">                com.itmo.siaod.perfect_hash.profiler.ProfilingReport rep = profiler.profileHashTableSiaodBuild(keysCount, maxKey);</span>
+<span class="nc" id="L76">        ArrayList&lt;ProfilingReport&gt; avgReps = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        for (int i = 1; i &lt; iterations + 1; i++) {</span>
+<span class="nc" id="L78">            int keysCount = keysCountInit * i;</span>
+<span class="nc" id="L79">            int maxKey = maxKeyInit * i;</span>
+<span class="nc" id="L80">            ArrayList&lt;ProfilingReport&gt; iterationReps = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L81">            System.out.println(iterations - i + &quot; profiling iterations left..&quot;);</span>
+<span class="nc bnc" id="L82" title="All 2 branches missed.">            for (int j = 0; j &lt; steps; j++) {</span>
+<span class="nc" id="L83">                ProfilingReport rep = profiler.profileHashTableSiaodBuild(keysCount, maxKey);</span>
                 //ProfilingReport rep = profiler.profileHashTableSiaodOperations(keysCount, maxKey);
-<span class="nc" id="L84">                iterationReps.add(rep);</span>
+<span class="nc" id="L85">                iterationReps.add(rep);</span>
             }
-<span class="nc" id="L86">            avgReps.add(com.itmo.siaod.perfect_hash.profiler.ProfilingReport.toAvg(iterationReps));</span>
+<span class="nc" id="L87">            avgReps.add(ProfilingReport.toAvg(iterationReps));</span>
         }
-<span class="nc" id="L88">        com.itmo.siaod.perfect_hash.profiler.ProfilingReport.print(avgReps);</span>
-<span class="nc" id="L89">    }</span>
+<span class="nc" id="L89">        ProfilingReport.print(avgReps);</span>
+<span class="nc" id="L90">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

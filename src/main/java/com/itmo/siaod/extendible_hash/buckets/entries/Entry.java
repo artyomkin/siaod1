@@ -6,6 +6,7 @@ public class Entry implements IEntry {
     private Integer value;
 
     public Entry(){};
+
     public Entry(Integer key, Integer value){
         this.key = key;
         this.value = value;

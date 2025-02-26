@@ -7,30 +7,30 @@ import java.util.ArrayList;
 
 public class LocalBucket implements ILocalBucket {
 
-<span class="nc" id="L10">    public static final Integer CAPACITY = 10;</span>
+<span class="fc" id="L10">    public static final Integer CAPACITY = 10;</span>
     private ArrayList&lt;IEntry&gt; entries;
     private Short depth;
 
-<span class="nc" id="L14">    public LocalBucket(Short depth){</span>
-<span class="nc" id="L15">        this.entries = new ArrayList&lt;&gt;(CAPACITY);</span>
-<span class="nc" id="L16">        this.depth = depth;</span>
-<span class="nc" id="L17">    }</span>
+<span class="fc" id="L14">    public LocalBucket(Short depth){</span>
+<span class="fc" id="L15">        this.entries = new ArrayList&lt;&gt;(CAPACITY);</span>
+<span class="fc" id="L16">        this.depth = depth;</span>
+<span class="fc" id="L17">    }</span>
 
     @Override
     public boolean put(Integer key, Integer value) {
-<span class="nc bnc" id="L21" title="All 2 branches missed.">        if (this.entries.size() &gt;= CAPACITY) {</span>
-<span class="nc" id="L22">            return false;</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        if (this.entries.size() &gt;= CAPACITY) {</span>
+<span class="fc" id="L22">            return false;</span>
         }
-<span class="nc" id="L24">        this.entries.add(new Entry(key, value));</span>
-<span class="nc" id="L25">        return true;</span>
+<span class="fc" id="L24">        this.entries.add(new Entry(key, value));</span>
+<span class="fc" id="L25">        return true;</span>
     }
 
     @Override
     public boolean delete(Integer key) {
-<span class="nc bnc" id="L30" title="All 2 branches missed.">        for (int i = 0; i &lt; this.entries.size(); i++){</span>
-<span class="nc bnc" id="L31" title="All 2 branches missed.">            if (this.entries.get(i).getKey().equals(key)){</span>
-<span class="nc" id="L32">                this.entries.remove(i);</span>
-<span class="nc" id="L33">                return true;</span>
+<span class="pc bpc" id="L30" title="1 of 2 branches missed.">        for (int i = 0; i &lt; this.entries.size(); i++){</span>
+<span class="pc bpc" id="L31" title="1 of 2 branches missed.">            if (this.entries.get(i).getKey().equals(key)){</span>
+<span class="fc" id="L32">                this.entries.remove(i);</span>
+<span class="fc" id="L33">                return true;</span>
             }
         }
 <span class="nc" id="L36">        return false;</span>
@@ -38,22 +38,22 @@ public class LocalBucket implements ILocalBucket {
 
     @Override
     public Integer get(Integer key) {
-<span class="nc bnc" id="L41" title="All 2 branches missed.">        for (IEntry entry : this.entries){</span>
-<span class="nc bnc" id="L42" title="All 2 branches missed.">            if (entry.getKey().equals(key)){</span>
-<span class="nc" id="L43">                return entry.getValue();</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        for (IEntry entry : this.entries){</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">            if (entry.getKey().equals(key)){</span>
+<span class="fc" id="L43">                return entry.getValue();</span>
             }
 <span class="nc" id="L45">        }</span>
-<span class="nc" id="L46">        return null;</span>
+<span class="fc" id="L46">        return null;</span>
     }
 
     @Override
     public Short depth() {
-<span class="nc" id="L51">        return this.depth;</span>
+<span class="fc" id="L51">        return this.depth;</span>
     }
 
     @Override
     public ArrayList&lt;IEntry&gt; getAll() {
-<span class="nc" id="L56">        return this.entries;</span>
+<span class="fc" id="L56">        return this.entries;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HashTableBucket.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.perfect_hash.hash_tables.buckets</a> &gt; <span class="el_source">HashTableBucket.java</span></div><h1>HashTableBucket.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.perfect_hash.hash_tables.buckets;
 
+import com.itmo.siaod.perfect_hash.hash_tables.ISimpleBucket;
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
 import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearHashFunction;
 import com.itmo.siaod.perfect_hash.hash_tables.IBucket;
-import com.itmo.siaod.perfect_hash.hash_tables.ISimpleBucket;
 import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
 
@@ -14,9 +14,9 @@ public class HashTableBucket implements IBucket {
     private ArrayList&lt;Integer&gt; hashTable;
     private IUniversalHashFunction universalHashFunction;
 
-<span class="nc" id="L17">    public HashTableBucket(ISimpleBucket simpleBucket) throws TooBigNumberException {</span>
-<span class="nc" id="L18">        initHashTable(simpleBucket.getVals());</span>
-<span class="nc" id="L19">    }</span>
+<span class="fc" id="L17">    public HashTableBucket(ISimpleBucket simpleBucket) throws TooBigNumberException {</span>
+<span class="fc" id="L18">        initHashTable(simpleBucket.getVals());</span>
+<span class="fc" id="L19">    }</span>
 
     @Override
     public boolean putKey(Integer key, Integer val) throws TooBigNumberException {
@@ -25,19 +25,19 @@ public class HashTableBucket implements IBucket {
 
     @Override
     public boolean put(Integer key, Integer val) throws TooBigNumberException {
-<span class="nc bnc" id="L28" title="All 6 branches missed.">        if (this.hashTable == null || this.hashTable.size() &lt;= 1 || this.universalHashFunction == null) return false;</span>
+<span class="pc bpc" id="L28" title="3 of 6 branches missed.">        if (this.hashTable == null || this.hashTable.size() &lt;= 1 || this.universalHashFunction == null) return false;</span>
 
-<span class="nc" id="L30">        int index = Math.toIntExact(this.universalHashFunction.hash(key));</span>
-<span class="nc" id="L31">        this.hashTable.set(index, val);</span>
-<span class="nc" id="L32">        return true;</span>
+<span class="fc" id="L30">        int index = Math.toIntExact(this.universalHashFunction.hash(key));</span>
+<span class="fc" id="L31">        this.hashTable.set(index, val);</span>
+<span class="fc" id="L32">        return true;</span>
     }
 
     @Override
     public Integer get(Integer key) throws TooBigNumberException {
-<span class="nc bnc" id="L37" title="All 6 branches missed.">        if (this.hashTable == null || this.hashTable.size() &lt;= 1 || this.universalHashFunction == null) return null;</span>
+<span class="pc bpc" id="L37" title="3 of 6 branches missed.">        if (this.hashTable == null || this.hashTable.size() &lt;= 1 || this.universalHashFunction == null) return null;</span>
 
-<span class="nc" id="L39">        int index = Math.toIntExact(this.universalHashFunction.hash(key));</span>
-<span class="nc" id="L40">        return this.hashTable.get(index);</span>
+<span class="fc" id="L39">        int index = Math.toIntExact(this.universalHashFunction.hash(key));</span>
+<span class="fc" id="L40">        return this.hashTable.get(index);</span>
     }
 
     @Override
@@ -47,81 +47,81 @@ public class HashTableBucket implements IBucket {
 
     @Override
     public boolean delete(Integer key) throws TooBigNumberException {
-<span class="nc bnc" id="L50" title="All 6 branches missed.">        if (this.hashTable == null || this.hashTable.size() &lt;= 1 || this.universalHashFunction == null) return false;</span>
+<span class="pc bpc" id="L50" title="3 of 6 branches missed.">        if (this.hashTable == null || this.hashTable.size() &lt;= 1 || this.universalHashFunction == null) return false;</span>
 
-<span class="nc" id="L52">        int index = Math.toIntExact(this.universalHashFunction.hash(key));</span>
-<span class="nc" id="L53">        this.hashTable.set(index, null);</span>
-<span class="nc" id="L54">        return true;</span>
+<span class="fc" id="L52">        int index = Math.toIntExact(this.universalHashFunction.hash(key));</span>
+<span class="fc" id="L53">        this.hashTable.set(index, null);</span>
+<span class="fc" id="L54">        return true;</span>
     }
 
     @Override
     public void resetValues() {
-<span class="nc" id="L59">        this.hashTable.replaceAll(ignored -&gt; null);</span>
-<span class="nc" id="L60">    }</span>
+<span class="fc" id="L59">        this.hashTable.replaceAll(ignored -&gt; null);</span>
+<span class="fc" id="L60">    }</span>
 
     @Override
     public boolean isSimple() {
-<span class="nc" id="L64">        return false;</span>
+<span class="fc" id="L64">        return false;</span>
     }
 
     @Override
     public String toString() {
-<span class="nc" id="L69">        return this.hashTable.toString();</span>
+<span class="fc" id="L69">        return this.hashTable.toString();</span>
     }
 
     protected int genHashTableSize(Integer keysCount) {
-<span class="nc" id="L73">        double antiCollisionFactor = (12d + (RandomSiaod.nextInt() % 9d)) / 10d;</span>
-<span class="nc" id="L74">        return (int) (antiCollisionFactor * Math.pow(keysCount, 2));</span>
+<span class="fc" id="L73">        double antiCollisionFactor = (12d + (RandomSiaod.nextInt() % 9d)) / 10d;</span>
+<span class="fc" id="L74">        return (int) (antiCollisionFactor * Math.pow(keysCount, 2));</span>
     }
 
     public void initHashTable(ArrayList&lt;Integer&gt; keysArr) throws TooBigNumberException {
-<span class="nc bnc" id="L78" title="All 4 branches missed.">        if (keysArr == null || keysArr.size() &lt;= 1) return;</span>
+<span class="pc bpc" id="L78" title="1 of 4 branches missed.">        if (keysArr == null || keysArr.size() &lt;= 1) return;</span>
 
-<span class="nc" id="L80">        int hashTableSize = genHashTableSize(keysArr.size());</span>
-<span class="nc" id="L81">        this.universalHashFunction = chooseHashFunction(hashTableSize, keysArr);</span>
-<span class="nc" id="L82">        this.hashTable = new ArrayList&lt;&gt;(hashTableSize);</span>
-<span class="nc bnc" id="L83" title="All 2 branches missed.">        for (int i = 0; i &lt; hashTableSize; i++){</span>
-<span class="nc" id="L84">            this.hashTable.add(null);</span>
+<span class="fc" id="L80">        int hashTableSize = genHashTableSize(keysArr.size());</span>
+<span class="fc" id="L81">        this.universalHashFunction = chooseHashFunction(hashTableSize, keysArr);</span>
+<span class="fc" id="L82">        this.hashTable = new ArrayList&lt;&gt;(hashTableSize);</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        for (int i = 0; i &lt; hashTableSize; i++){</span>
+<span class="fc" id="L84">            this.hashTable.add(null);</span>
         }
-<span class="nc" id="L86">    }</span>
+<span class="fc" id="L86">    }</span>
 
     protected IUniversalHashFunction chooseHashFunction(Integer hashTableSize, ArrayList&lt;Integer&gt; keysArr) throws TooBigNumberException {
-<span class="nc" id="L89">        final int MAX_ATTEMPTS = 100;</span>
-<span class="nc" id="L90">        int attempts = 0;</span>
-<span class="nc" id="L91">        IUniversalHashFunction function = null;</span>
-<span class="nc bnc" id="L92" title="All 2 branches missed.">        while (doesFunctionMakeCollisions(keysArr, function)){</span>
-<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (attempts &gt; MAX_ATTEMPTS){</span>
+<span class="fc" id="L89">        final int MAX_ATTEMPTS = 100;</span>
+<span class="fc" id="L90">        int attempts = 0;</span>
+<span class="fc" id="L91">        IUniversalHashFunction function = null;</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">        while (doesFunctionMakeCollisions(keysArr, function)){</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">            if (attempts &gt; MAX_ATTEMPTS){</span>
 <span class="nc" id="L94">                throw new RuntimeException(&quot;Cannot choose hash function.&quot;);</span>
             }
-<span class="nc" id="L96">            function = shuffleFunction(keysArr, hashTableSize);</span>
-<span class="nc" id="L97">            attempts++;</span>
+<span class="fc" id="L96">            function = shuffleFunction(keysArr, hashTableSize);</span>
+<span class="fc" id="L97">            attempts++;</span>
         }
-<span class="nc" id="L99">        return function;</span>
+<span class="fc" id="L99">        return function;</span>
     }
 
     protected UniversalLinearHashFunction shuffleFunction(ArrayList&lt;Integer&gt; keysArr, int hashTableSize) throws TooBigNumberException {
-<span class="nc" id="L103">        return new UniversalLinearHashFunction(keysArr, hashTableSize);</span>
+<span class="fc" id="L103">        return new UniversalLinearHashFunction(keysArr, hashTableSize);</span>
     }
 
     protected boolean doesFunctionMakeCollisions(ArrayList&lt;Integer&gt; keysArr, IUniversalHashFunction function) throws TooBigNumberException {
-<span class="nc bnc" id="L107" title="All 4 branches missed.">        if (keysArr == null || function == null) return true;</span>
-<span class="nc" id="L108">        ArrayList&lt;Integer&gt; hashes = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L109" title="All 2 branches missed.">        for (Integer key : keysArr) {</span>
-<span class="nc" id="L110">            Integer hash = Math.toIntExact(function.hash(key));</span>
+<span class="pc bpc" id="L107" title="1 of 4 branches missed.">        if (keysArr == null || function == null) return true;</span>
+<span class="fc" id="L108">        ArrayList&lt;Integer&gt; hashes = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        for (Integer key : keysArr) {</span>
+<span class="fc" id="L110">            Integer hash = Math.toIntExact(function.hash(key));</span>
             // collision
-<span class="nc bnc" id="L112" title="All 2 branches missed.">            if (hashes.contains(hash)) return true;</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">            if (hashes.contains(hash)) return true;</span>
 
-<span class="nc" id="L114">            hashes.add(hash);</span>
-<span class="nc" id="L115">        }</span>
-<span class="nc" id="L116">        return false;</span>
+<span class="fc" id="L114">            hashes.add(hash);</span>
+<span class="fc" id="L115">        }</span>
+<span class="fc" id="L116">        return false;</span>
     }
 
     protected IUniversalHashFunction getHashFunction(){
-<span class="nc" id="L120">        return this.universalHashFunction;</span>
+<span class="fc" id="L120">        return this.universalHashFunction;</span>
     }
 
     public ArrayList&lt;Integer&gt; getHashTable(){
-<span class="nc" id="L124">        return this.hashTable;</span>
+<span class="fc" id="L124">        return this.hashTable;</span>
     }
 
 }

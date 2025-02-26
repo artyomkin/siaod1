@@ -9,6 +9,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.openjdk.jol.info.ClassLayout;
 
 
@@ -37,7 +38,7 @@ public class Profiler {
         HashTableSiaod hashTableSiaod = createHashTableSiaod(keysCount, maxKey);
         long timeEnd = System.currentTimeMillis();
 
-        com.itmo.siaod.perfect_hash.profiler.ProfilingReport rep = new com.itmo.siaod.perfect_hash.profiler.ProfilingReport();
+        ProfilingReport rep = new ProfilingReport();
         rep.elapsedTimeSeconds = (timeEnd - timeStart) / 1000d;
         rep.memoryUsedMB = getMemoryUsage(hashTableSiaod.buckets.toArray()) / Math.pow(2, 20);
         rep.keysCount = keysCount;
@@ -45,7 +46,7 @@ public class Profiler {
         return rep;
     }
 
-    public com.itmo.siaod.perfect_hash.profiler.ProfilingReport profileHashTableSiaodOperations(Integer keysCount, Integer maxKey) throws TooBigNumberException, CollisionException {
+    public ProfilingReport profileHashTableSiaodOperations(Integer keysCount, Integer maxKey) throws TooBigNumberException, CollisionException {
         HashTableSiaod hashTableSiaod = createHashTableSiaod(keysCount, maxKey);
 
         long timeStart = System.currentTimeMillis();
@@ -57,7 +58,7 @@ public class Profiler {
             hashTableSiaod.put(key, val);
         }
         long timeEnd = System.currentTimeMillis();
-        com.itmo.siaod.perfect_hash.profiler.ProfilingReport rep = new com.itmo.siaod.perfect_hash.profiler.ProfilingReport();
+        ProfilingReport rep = new ProfilingReport();
         rep.elapsedTimeSeconds = (timeEnd - timeStart) / 1000d;
         rep.memoryUsedMB = 0d;
         rep.keysCount = keysCount;
@@ -72,19 +73,19 @@ public class Profiler {
         int iterations = 30;
         int steps = 30;
 
-        ArrayList<com.itmo.siaod.perfect_hash.profiler.ProfilingReport> avgReps = new ArrayList<>();
+        ArrayList<ProfilingReport> avgReps = new ArrayList<>();
         for (int i = 1; i < iterations + 1; i++) {
             int keysCount = keysCountInit * i;
             int maxKey = maxKeyInit * i;
-            ArrayList<com.itmo.siaod.perfect_hash.profiler.ProfilingReport> iterationReps = new ArrayList<>();
+            ArrayList<ProfilingReport> iterationReps = new ArrayList<>();
             System.out.println(iterations - i + " profiling iterations left..");
             for (int j = 0; j < steps; j++) {
-                com.itmo.siaod.perfect_hash.profiler.ProfilingReport rep = profiler.profileHashTableSiaodBuild(keysCount, maxKey);
+                ProfilingReport rep = profiler.profileHashTableSiaodBuild(keysCount, maxKey);
                 //ProfilingReport rep = profiler.profileHashTableSiaodOperations(keysCount, maxKey);
                 iterationReps.add(rep);
             }
-            avgReps.add(com.itmo.siaod.perfect_hash.profiler.ProfilingReport.toAvg(iterationReps));
+            avgReps.add(ProfilingReport.toAvg(iterationReps));
         }
-        com.itmo.siaod.perfect_hash.profiler.ProfilingReport.print(avgReps);
+        ProfilingReport.print(avgReps);
     }
 }
