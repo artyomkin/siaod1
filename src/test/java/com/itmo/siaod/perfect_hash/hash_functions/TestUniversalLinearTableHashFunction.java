@@ -10,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestUniversalLinearHashFunction {
-    UniversalLinearHashFunction function;
+public class TestUniversalLinearTableHashFunction {
+    UniversalLinearTableHashFunction function;
     List<Integer> possibleKeys;
     int hashTableSize;
 
@@ -23,7 +23,7 @@ public class TestUniversalLinearHashFunction {
             this.possibleKeys.add(RandomSiaod.nextInt() % 1_000_000);
         }
         this.hashTableSize = possibleKeysSize * 2;
-        this.function = new UniversalLinearHashFunction(possibleKeys, this.hashTableSize);
+        this.function = new UniversalLinearTableHashFunction(possibleKeys, this.hashTableSize);
     }
 
     @Test

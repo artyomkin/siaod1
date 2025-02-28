@@ -2,7 +2,7 @@ package com.itmo.siaod.perfect_hash.hash_tables.buckets;
 
 import com.itmo.siaod.perfect_hash.hash_tables.ISimpleBucket;
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
-import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearHashFunction;
+import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearTableHashFunction;
 import com.itmo.siaod.perfect_hash.hash_tables.IBucket;
 import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
@@ -99,8 +99,8 @@ public class HashTableBucket implements IBucket {
         return function;
     }
 
-    protected UniversalLinearHashFunction shuffleFunction(ArrayList<Integer> keysArr, int hashTableSize) throws TooBigNumberException {
-        return new UniversalLinearHashFunction(keysArr, hashTableSize);
+    protected UniversalLinearTableHashFunction shuffleFunction(ArrayList<Integer> keysArr, int hashTableSize) throws TooBigNumberException {
+        return new UniversalLinearTableHashFunction(keysArr, hashTableSize);
     }
 
     protected boolean doesFunctionMakeCollisions(ArrayList<Integer> keysArr, IUniversalHashFunction function) throws TooBigNumberException {

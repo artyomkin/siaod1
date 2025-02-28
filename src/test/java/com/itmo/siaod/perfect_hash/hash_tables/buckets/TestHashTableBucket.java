@@ -1,7 +1,7 @@
 package com.itmo.siaod.perfect_hash.hash_tables.buckets;
 
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
-import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearHashFunction;
+import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearTableHashFunction;
 import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +49,7 @@ public class TestHashTableBucket {
 
     @Test
     public void testDoesFunctionMakeCollisions() throws TooBigNumberException {
-        UniversalLinearHashFunction function = new UniversalLinearHashFunction(possibleKeys, possibleKeys.size() - 1);
+        UniversalLinearTableHashFunction function = new UniversalLinearTableHashFunction(possibleKeys, possibleKeys.size() - 1);
         assertTrue(bucket.doesFunctionMakeCollisions(possibleKeys, function));
     }
 

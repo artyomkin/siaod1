@@ -3,7 +3,7 @@ package com.itmo.siaod.perfect_hash.hash_tables;
 import com.itmo.siaod.perfect_hash.IHashTableSiaod;
 import com.itmo.siaod.perfect_hash.exceptions.CollisionException;
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
-import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearHashFunction;
+import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearTableHashFunction;
 import com.itmo.siaod.perfect_hash.hash_tables.buckets.HashTableBucket;
 import com.itmo.siaod.perfect_hash.hash_tables.buckets.SimpleBucket;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
@@ -27,7 +27,7 @@ public class HashTableSiaod implements IHashTableSiaod {
         this.possibleKeys = allUniqPossibleKeys;
 
         this.hashTableSize = (12 + RandomSiaod.nextInt() % 9) / 10 * allUniqPossibleKeysCount;
-        this.hashFunction = new UniversalLinearHashFunction(allUniqPossibleKeys, this.hashTableSize);
+        this.hashFunction = new UniversalLinearTableHashFunction(allUniqPossibleKeys, this.hashTableSize);
 
         initializeFirstLayer(allUniqPossibleKeys);
         initializeSecondLayer();
