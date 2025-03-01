@@ -12,8 +12,8 @@ import java.util.List;
 
 public class HashTableSiaod implements IHashTableSiaod {
 
-    private List<IBucket> buckets;
-    private IUniversalHashFunction hashFunction;
+    private final List<IBucket> buckets;
+    private final IUniversalHashFunction hashFunction;
 
     public HashTableSiaod(Integer bucketsNumber) {
         this.hashFunction = new UniversalLinearLimitedHashFunction(bucketsNumber);
