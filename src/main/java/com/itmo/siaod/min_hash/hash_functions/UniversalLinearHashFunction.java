@@ -1,6 +1,5 @@
-package com.itmo.siaod.perfect_hash.hash_functions;
+package com.itmo.siaod.min_hash.hash_functions;
 
-import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
 import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
 import com.itmo.siaod.perfect_hash.prime_numbers.IPrimeGenerator;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
@@ -20,11 +19,8 @@ public class UniversalLinearHashFunction implements IUniversalHashFunction {
     }
 
     @Override
-    public Long hash(Integer key) throws TooBigNumberException {
-        long res = (a * key + b) % p;
-        if (res < 0)
-            throw new TooBigNumberException("hash is negative.");
-        return res;
+    public Long hash(Integer key) {
+        return (a * key + b) % p;
     }
 
 }
