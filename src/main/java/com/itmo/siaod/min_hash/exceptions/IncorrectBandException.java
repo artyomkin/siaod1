@@ -1,4 +1,4 @@
-package com.itmo.siaod.exceptions;
+package com.itmo.siaod.min_hash.exceptions;
 
 public class IncorrectBandException extends Exception {
     public IncorrectBandException(){

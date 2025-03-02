@@ -17,12 +17,12 @@ public class MinHash implements IMinHash {
     }
 
     @Override
-    public ISignature getSignatureOf(LinkedHashSet<Integer> x) {
+    public ISignature getSignatureOf(Set<Integer> x) {
         if (x == null) return null;
         return new Signature(this.functions.stream().map(func -> getMinHashOf(x, func)).toList());
     }
 
-    protected static Integer getMinHashOf(LinkedHashSet<Integer> x, UniversalLinearHashFunction function) {
+    protected static Integer getMinHashOf(Set<Integer> x, UniversalLinearHashFunction function) {
         if (x == null || function == null) return null;
         return Math.toIntExact(x.stream().map(function::hash).min(Comparator.naturalOrder()).get());
     }

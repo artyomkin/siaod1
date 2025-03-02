@@ -2,6 +2,10 @@ package com.itmo.siaod.extendible_hash.hash_tables;
 
 import com.itmo.siaod.extendible_hash.IHashTableSiaod;
 import com.itmo.siaod.extendible_hash.buckets.GlobalBucket;
+import com.itmo.siaod.extendible_hash.buckets.ILocalBucket;
+import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
+
+import java.util.List;
 
 public class HashTableSiaod implements IHashTableSiaod {
 
@@ -24,5 +28,10 @@ public class HashTableSiaod implements IHashTableSiaod {
     @Override
     public boolean delete(Integer key) {
         return this.globalBucket.delete(key);
+    }
+
+    @Override
+    public List<List<IEntry>> getAllEntries() {
+        return this.globalBucket.getEntries();
     }
 }

@@ -1,4 +1,4 @@
-package com.itmo.siaod.min_hash;
+package com.itmo.siaod.min_hash.similarity_identifier;
 
 import com.itmo.siaod.min_hash.signatures.ISignature;
 
