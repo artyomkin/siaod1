@@ -1,8 +1,7 @@
 package com.itmo.siaod.min_hash.similarity_identifier;
 
-import com.itmo.siaod.extendible_hash.IHashTableSiaod;
-import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
-import com.itmo.siaod.extendible_hash.hash_tables.HashTableSiaod;
+import com.itmo.siaod.min_hash.hash_tables.HashTableSiaod;
+import com.itmo.siaod.min_hash.hash_tables.IHashTableSiaod;
 import com.itmo.siaod.min_hash.hash_tables.bands.IBand;
 import com.itmo.siaod.min_hash.hash_tables.bands.IBandToHashKeyMapper;
 import com.itmo.siaod.min_hash.hash_tables.bands.IBander;
@@ -21,11 +20,15 @@ public interface ISimilarityIdentifier {
     static IHashTableSiaod distributeSignatures(List<ISignature> signatures) {
         List<IBand> bands = IBander.splitIntoBands(signatures);
         List<List<Integer>> bandsHashKeys = IBandToHashKeyMapper.mapBandsToHashKeys(bands);
-        IHashTableSiaod hashTable = new HashTableSiaod();
+        IHashTableSiaod hashTable = new HashTableSiaod(bands.size() * signatures.size());
         for (int signatureIndex = 0; signatureIndex < signatures.size(); signatureIndex++) {
-            List<Integer> bandHashKeys = bandsHashKeys.get(signatureIndex);
-            for (int bandHashKey : bandHashKeys) {
-                hashTable.put(bandHashKey, signatureIndex);
+            List<Integer> curBandHashKeys = bandsHashKeys.get(signatureIndex);
+            for (int bandHashKey : curBandHashKeys) {
+                try {
+                    hashTable.put(bandHashKey, signatureIndex);
+                } catch (TooBigNumberException e){
+                    throw new RuntimeException();
+                }
             }
         }
         return hashTable;
