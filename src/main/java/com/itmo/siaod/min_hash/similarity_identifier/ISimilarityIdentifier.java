@@ -21,11 +21,11 @@ public interface ISimilarityIdentifier {
         List<IBand> bands = IBander.splitIntoBands(signatures);
         List<List<Integer>> bandsHashKeys = IBandToHashKeyMapper.mapBandsToHashKeys(bands);
         IHashTableSiaod hashTable = new HashTableSiaod(bands.size() * signatures.size());
-        for (int signatureIndex = 0; signatureIndex < signatures.size(); signatureIndex++) {
-            List<Integer> curBandHashKeys = bandsHashKeys.get(signatureIndex);
-            for (int bandHashKey : curBandHashKeys) {
+        for (int bandIndex = 0; bandIndex < bandsHashKeys.size(); bandIndex++){
+            List<Integer> curBandHashKeys = bandsHashKeys.get(bandIndex);
+            for (int signatureIndex = 0; signatureIndex < signatures.size(); signatureIndex++){
                 try {
-                    hashTable.put(bandHashKey, signatureIndex);
+                    hashTable.put(curBandHashKeys.get(signatureIndex), signatureIndex);
                 } catch (TooBigNumberException e){
                     throw new RuntimeException();
                 }

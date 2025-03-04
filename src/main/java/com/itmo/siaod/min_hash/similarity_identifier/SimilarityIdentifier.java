@@ -1,5 +1,6 @@
 package com.itmo.siaod.min_hash.similarity_identifier;
 
+import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
 import com.itmo.siaod.min_hash.hash_tables.IHashTableSiaod;
 import com.itmo.siaod.min_hash.signatures.IMinHash;
 import com.itmo.siaod.min_hash.signatures.ISignature;

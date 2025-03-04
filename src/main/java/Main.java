@@ -13,9 +13,8 @@ import static java.lang.Thread.sleep;
 public class Main {
     public static void main(String[] args) throws TooBigNumberException, CollisionException {
         Set<Integer> a = Set.of(1, 3, 49, 29, 28);
-        Set<Integer> b = Set.of(1, 3, 49, 119, 28);
-        Set<Integer> c = Set.of(440, 110);
-        List<Set<Integer>> sets = List.of(a,b,c);
+        Set<Integer> b = Set.of(2, 31, 9, 21, 312);
+        List<Set<Integer>> sets = List.of(a,b);
         ISimilarityIdentifier similarityIdentifier = new SimilarityIdentifier(sets);
         System.out.println(similarityIdentifier.toString());
     }

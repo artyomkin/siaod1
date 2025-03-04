@@ -1,5 +1,6 @@
 package com.itmo.siaod.min_hash.hash_tables;
 
+import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
 import com.itmo.siaod.min_hash.hash_functions.UniversalLinearLimitedHashFunction;
 import com.itmo.siaod.min_hash.hash_tables.buckets.Bucket;
 import com.itmo.siaod.min_hash.hash_tables.buckets.IBucket;
@@ -42,6 +43,17 @@ public class HashTableSiaod implements IHashTableSiaod {
         int index = Math.toIntExact(this.hashFunction.hash(key));
         ensureBucketExists(index);
         return this.buckets.get(index).get(key);
+    }
+
+    @Override
+    public List<List<IEntry>> getAllEntries() {
+        List<List<IEntry>> entries = new ArrayList<>();
+        for (int i = 0; i < buckets.size(); i++){
+            if (this.buckets.get(i) != null){
+                entries.add(this.buckets.get(i).getAll());
+            }
+        }
+        return entries;
     }
 
     private void ensureBucketExists(Integer index){

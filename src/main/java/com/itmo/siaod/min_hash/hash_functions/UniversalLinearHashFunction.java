@@ -10,7 +10,7 @@ public class UniversalLinearHashFunction implements IUniversalHashFunction {
     private Long p;
 
     public UniversalLinearHashFunction() {
-        p = IPrimeGenerator.findNextPrime((long) (RandomSiaod.nextInt() % 100_000 + 1_000_000));
+        p = IPrimeGenerator.findNextPrime((long) (RandomSiaod.nextInt() % 1_000 + 1_000_000));
         b = RandomSiaod.nextInt() % p;
         a = RandomSiaod.nextInt() % p;
         if (a == 0){
