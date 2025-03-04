@@ -6,16 +6,20 @@ import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Bucket implements IBucket {
+public class SetBucket implements IBucket {
 
     private List<IEntry> entries;
 
-    public Bucket() {
+    public SetBucket() {
         this.entries = new ArrayList<>();
     }
 
     @Override
     public boolean put(Integer key, Integer val) {
+        boolean entriesContainKeyVal = this.entries.stream()
+                .anyMatch(entry -> entry.getKey().equals(key) && entry.getValue().equals(val));
+        if (entriesContainKeyVal) return false;
+
         this.entries.add(new Entry(key, val));
         return true;
     }

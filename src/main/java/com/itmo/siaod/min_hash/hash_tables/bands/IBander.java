@@ -9,7 +9,7 @@ import java.util.List;
 public interface IBander {
 
     Integer BAND_SIZE = 2;
-    Integer BAND_NUMBER = 50;
+    Integer BAND_NUMBER = 10;
 
     static List<IBand> splitIntoBands(List<ISignature> signatures) {
         List<IBand> bands = new ArrayList<>();

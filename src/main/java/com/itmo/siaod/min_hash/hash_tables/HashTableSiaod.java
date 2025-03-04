@@ -2,9 +2,10 @@ package com.itmo.siaod.min_hash.hash_tables;
 
 import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
 import com.itmo.siaod.min_hash.hash_functions.UniversalLinearLimitedHashFunction;
-import com.itmo.siaod.min_hash.hash_tables.buckets.Bucket;
+import com.itmo.siaod.min_hash.hash_tables.buckets.SetBucket;
 import com.itmo.siaod.min_hash.hash_tables.buckets.IBucket;
 import com.itmo.siaod.min_hash.hash_functions.UniversalLinearHashFunction;
+import com.itmo.siaod.min_hash.hash_tables.buckets.SetBucket;
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
 import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
 
@@ -58,7 +59,7 @@ public class HashTableSiaod implements IHashTableSiaod {
 
     private void ensureBucketExists(Integer index){
         if (this.buckets.get(index) == null){
-            this.buckets.set(index, new Bucket());
+            this.buckets.set(index, new SetBucket());
         }
     }
 }

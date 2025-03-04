@@ -1,0 +1,419 @@
+[1mdiff --git a/src/main/java/Main.java b/src/main/java/Main.java[m
+[1mindex 5d4496c..07298e0 100644[m
+[1m--- a/src/main/java/Main.java[m
+[1m+++ b/src/main/java/Main.java[m
+[36m@@ -1,10 +1,15 @@[m
+ import com.itmo.siaod.extendible_hash.hash_tables.HashTableSiaod;[m
+[32m+[m[32mimport com.itmo.siaod.min_hash.signatures.Signature;[m
+[32m+[m[32mimport com.itmo.siaod.min_hash.similarity_identifier.IJaccardCoef;[m
+ import com.itmo.siaod.min_hash.similarity_identifier.ISimilarityIdentifier;[m
+ import com.itmo.siaod.min_hash.similarity_identifier.SimilarityIdentifier;[m
+ import com.itmo.siaod.perfect_hash.IHashTableSiaod;[m
+ import com.itmo.siaod.perfect_hash.exceptions.CollisionException;[m
+ import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;[m
+[32m+[m[32mimport com.itmo.siaod.perfect_hash.utils.RandomSiaod;[m
+ [m
+[32m+[m[32mimport java.util.ArrayList;[m
+[32m+[m[32mimport java.util.HashSet;[m
+ import java.util.List;[m
+ import java.util.Set;[m
+ [m
+[36m@@ -12,10 +17,20 @@[m [mimport static java.lang.Thread.sleep;[m
+ [m
+ public class Main {[m
+     public static void main(String[] args) throws TooBigNumberException, CollisionException {[m
+[31m-        Set<Integer> a = Set.of(1, 3, 49, 29, 28);[m
+[31m-        Set<Integer> b = Set.of(2, 31, 9, 21, 312);[m
+[31m-        List<Set<Integer>> sets = List.of(a,b);[m
+[32m+[m[32m        int numbers = 100;[m
+[32m+[m[32m        int setNumber = 3000;[m
+[32m+[m[32m        List<Set<Integer>> sets = new ArrayList<>();[m
+[32m+[m[32m        for (int s = 0; s < setNumber; s++){[m
+[32m+[m[32m            Set<Integer> temp = new HashSet<>();[m
+[32m+[m[32m            for (int i = 0; i < numbers; i++){[m
+[32m+[m[32m                temp.add(RandomSiaod.nextInt() % 10000);[m
+[32m+[m[32m            }[m
+[32m+[m[32m            sets.add(temp);[m
+[32m+[m[32m        }[m
+[32m+[m[32m        double start = System.currentTimeMillis();[m
+         ISimilarityIdentifier similarityIdentifier = new SimilarityIdentifier(sets);[m
+         System.out.println(similarityIdentifier.toString());[m
+[32m+[m[32m        double end = System.currentTimeMillis();[m
+[32m+[m[32m        System.out.println("elapsed: " + (end - start) + " milliseconds");[m
+     }[m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/src/main/java/com/itmo/siaod/min_hash/hash_tables/HashTableSiaod.java b/src/main/java/com/itmo/siaod/min_hash/hash_tables/HashTableSiaod.java[m
+[1mindex 5381c07..0542a15 100644[m
+[1m--- a/src/main/java/com/itmo/siaod/min_hash/hash_tables/HashTableSiaod.java[m
+[1m+++ b/src/main/java/com/itmo/siaod/min_hash/hash_tables/HashTableSiaod.java[m
+[36m@@ -2,9 +2,10 @@[m [mpackage com.itmo.siaod.min_hash.hash_tables;[m
+ [m
+ import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;[m
+ import com.itmo.siaod.min_hash.hash_functions.UniversalLinearLimitedHashFunction;[m
+[31m-import com.itmo.siaod.min_hash.hash_tables.buckets.Bucket;[m
+[32m+[m[32mimport com.itmo.siaod.min_hash.hash_tables.buckets.SetBucket;[m
+ import com.itmo.siaod.min_hash.hash_tables.buckets.IBucket;[m
+ import com.itmo.siaod.min_hash.hash_functions.UniversalLinearHashFunction;[m
+[32m+[m[32mimport com.itmo.siaod.min_hash.hash_tables.buckets.SetBucket;[m
+ import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;[m
+ import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;[m
+ [m
+[36m@@ -58,7 +59,7 @@[m [mpublic class HashTableSiaod implements IHashTableSiaod {[m
+ [m
+     private void ensureBucketExists(Integer index){[m
+         if (this.buckets.get(index) == null){[m
+[31m-            this.buckets.set(index, new Bucket());[m
+[32m+[m[32m            this.buckets.set(index, new SetBucket());[m
+         }[m
+     }[m
+ }[m
+[1mdiff --git a/src/main/java/com/itmo/siaod/min_hash/hash_tables/bands/IBandToHashKeyMapper.java b/src/main/java/com/itmo/siaod/min_hash/hash_tables/bands/IBandToHashKeyMapper.java[m
+[1mindex f9b403d..230da73 100644[m
+[1m--- a/src/main/java/com/itmo/siaod/min_hash/hash_tables/bands/IBandToHashKeyMapper.java[m
+[1m+++ b/src/main/java/com/itmo/siaod/min_hash/hash_tables/bands/IBandToHashKeyMapper.java[m
+[36m@@ -20,7 +20,11 @@[m [mpublic interface IBandToHashKeyMapper {[m
+ [m
+         int res = l.getFirst();[m
+         for (int i = 1; i < l.size(); i++){[m
+[31m-            res = res * 10 + l.get(i);[m
+[32m+[m[32m            int pow = 10;[m
+[32m+[m[32m            while (l.get(i) >= pow){[m
+[32m+[m[32m                pow *= 10;[m
+[32m+[m[32m            }[m
+[32m+[m[32m            res = res * pow + l.get(i);[m
+         }[m
+         return res;[m
+     }[m
+[1mdiff --git a/src/main/java/com/itmo/siaod/min_hash/hash_tables/bands/IBander.java b/src/main/java/com/itmo/siaod/min_hash/hash_tables/bands/IBander.java[m
+[1mindex e7e3b68..6508578 100644[m
+[1m--- a/src/main/java/com/itmo/siaod/min_hash/hash_tables/bands/IBander.java[m
+[1m+++ b/src/main/java/com/itmo/siaod/min_hash/hash_tables/bands/IBander.java[m
+[36m@@ -9,7 +9,7 @@[m [mimport java.util.List;[m
+ public interface IBander {[m
+ [m
+     Integer BAND_SIZE = 2;[m
+[31m-    Integer BAND_NUMBER = 50;[m
+[32m+[m[32m    Integer BAND_NUMBER = 10;[m
+ [m
+     static List<IBand> splitIntoBands(List<ISignature> signatures) {[m
+         List<IBand> bands = new ArrayList<>();[m
+[1mdiff --git a/src/main/java/com/itmo/siaod/min_hash/hash_tables/buckets/SetBucket.java b/src/main/java/com/itmo/siaod/min_hash/hash_tables/buckets/SetBucket.java[m
+[1mindex 1ef74fa..92f4218 100644[m
+[1m--- a/src/main/java/com/itmo/siaod/min_hash/hash_tables/buckets/SetBucket.java[m
+[1m+++ b/src/main/java/com/itmo/siaod/min_hash/hash_tables/buckets/SetBucket.java[m
+[36m@@ -6,16 +6,20 @@[m [mimport com.itmo.siaod.extendible_hash.buckets.entries.IEntry;[m
+ import java.util.ArrayList;[m
+ import java.util.List;[m
+ [m
+[31m-public class UniversalBucket implements IBucket {[m
+[32m+[m[32mpublic class SetBucket implements IBucket {[m
+ [m
+     private List<IEntry> entries;[m
+ [m
+[31m-    public UniversalBucket() {[m
+[32m+[m[32m    public SetBucket() {[m
+         this.entries = new ArrayList<>();[m
+     }[m
+ [m
+     @Override[m
+     public boolean put(Integer key, Integer val) {[m
+[32m+[m[32m        boolean entriesContainKeyVal = this.entries.stream()[m
+[32m+[m[32m                .anyMatch(entry -> entry.getKey().equals(key) && entry.getValue().equals(val));[m
+[32m+[m[32m        if (entriesContainKeyVal) return false;[m
+[32m+[m
+         this.entries.add(new Entry(key, val));[m
+         return true;[m
+     }[m
+[1mdiff --git a/src/main/java/com/itmo/siaod/min_hash/signatures/IMinHash.java b/src/main/java/com/itmo/siaod/min_hash/signatures/IMinHash.java[m
+[1mindex 7ba90e3..994a2ee 100644[m
+[1m--- a/src/main/java/com/itmo/siaod/min_hash/signatures/IMinHash.java[m
+[1m+++ b/src/main/java/com/itmo/siaod/min_hash/signatures/IMinHash.java[m
+[36m@@ -3,8 +3,9 @@[m [mpackage com.itmo.siaod.min_hash.signatures;[m
+ import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;[m
+ [m
+ import java.util.LinkedHashSet;[m
+[32m+[m[32mimport java.util.List;[m
+ import java.util.Set;[m
+ [m
+ public interface IMinHash {[m
+[31m-    ISignature getSignatureOf(Set<Integer> x) throws TooBigNumberException;[m
+[32m+[m[32m    List<ISignature> getSignatures();[m
+ }[m
+[1mdiff --git a/src/main/java/com/itmo/siaod/min_hash/signatures/ISignature.java b/src/main/java/com/itmo/siaod/min_hash/signatures/ISignature.java[m
+[1mindex df4e401..83d1c3e 100644[m
+[1m--- a/src/main/java/com/itmo/siaod/min_hash/signatures/ISignature.java[m
+[1m+++ b/src/main/java/com/itmo/siaod/min_hash/signatures/ISignature.java[m
+[36m@@ -1,20 +1,23 @@[m
+ package com.itmo.siaod.min_hash.signatures;[m
+ [m
+ import java.util.ArrayList;[m
+[32m+[m[32mimport java.util.HashSet;[m
+ import java.util.List;[m
+[32m+[m[32mimport java.util.Set;[m
+[32m+[m[32mimport java.util.stream.Collectors;[m
+ [m
+ public interface ISignature {[m
+ [m
+     List<Integer> getMinHashes();[m
+ [m
+     static Integer countIntersected(ISignature a, ISignature b) {[m
+[31m-        List<Integer> intersection = new ArrayList<>(a.getMinHashes());[m
+[32m+[m[32m        Set<Integer> intersection = new HashSet<>(a.getMinHashes());[m
+         intersection.retainAll(b.getMinHashes());[m
+         return intersection.size();[m
+     }[m
+ [m
+     static Integer countUnited(ISignature a, ISignature b) {[m
+[31m-        List<Integer> union = new ArrayList<>(a.getMinHashes());[m
+[32m+[m[32m        Set<Integer> union = new HashSet<>(a.getMinHashes());[m
+         union.addAll(b.getMinHashes());[m
+         return union.size();[m
+     }[m
+[1mdiff --git a/src/main/java/com/itmo/siaod/min_hash/signatures/MinHash.java b/src/main/java/com/itmo/siaod/min_hash/signatures/MinHash.java[m
+[1mindex 9dd9c77..33db1b7 100644[m
+[1m--- a/src/main/java/com/itmo/siaod/min_hash/signatures/MinHash.java[m
+[1m+++ b/src/main/java/com/itmo/siaod/min_hash/signatures/MinHash.java[m
+[36m@@ -1,34 +1,71 @@[m
+ package com.itmo.siaod.min_hash.signatures;[m
+[31m-import com.itmo.siaod.min_hash.hash_tables.bands.IBander;[m
+[31m-import com.itmo.siaod.min_hash.hash_functions.UniversalLinearHashFunction;[m
+ [m
+ import java.util.*;[m
+ [m
+ public class MinHash implements IMinHash {[m
+ [m
+[31m-    protected ArrayList<UniversalLinearHashFunction> functions;[m
+[32m+[m[32m    private List<List<Integer>> universalSetPermutations;[m
+[32m+[m[32m    private Set<Integer> universalSet;[m
+[32m+[m[32m    private List<ISignature> signatures;[m
+ [m
+[31m-    public MinHash(){[m
+[31m-        this.functions = new ArrayList<>();[m
+[31m-        int functionsNumber = calculateFunctionsNumber();[m
+[31m-        for (int i = 0; i < functionsNumber; i++) {[m
+[31m-            this.functions.add(new UniversalLinearHashFunction());[m
+[31m-        }[m
+[32m+[m[32m    public MinHash(List<Set<Integer>> sets){[m
+[32m+[m[32m        this.universalSet = toUniversalSet(sets);[m
+[32m+[m[32m        this.universalSetPermutations = permuteSetNTimes(this.universalSet, 20);[m
+[32m+[m[32m        this.signatures = calculateSignatures(this.universalSetPermutations, sets);[m
+     }[m
+ [m
+     @Override[m
+[31m-    public ISignature getSignatureOf(Set<Integer> x) {[m
+[31m-        if (x == null) return null;[m
+[31m-        return new Signature(this.functions.stream().map(func -> getMinHashOf(x, func)).toList());[m
+[32m+[m[32m    public List<ISignature> getSignatures() {[m
+[32m+[m[32m        return this.signatures;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    protected static List<ISignature> calculateSignatures(List<List<Integer>> universalSetPermutations, List<Set<Integer>> originalSets){[m
+[32m+[m[32m        List<ISignature> signatures = new ArrayList<>();[m
+[32m+[m[32m        return originalSets.stream()[m
+[32m+[m[32m                .map(set -> calculateSignature(universalSetPermutations, set))[m
+[32m+[m[32m                .toList();[m
+     }[m
+ [m
+[31m-    protected static Integer getMinHashOf(Set<Integer> x, UniversalLinearHashFunction function) {[m
+[31m-        if (x == null || function == null) return null;[m
+[31m-        return Math.toIntExact(x.stream().map(function::hash).min(Comparator.naturalOrder()).get());[m
+[32m+[m[32m    protected static ISignature calculateSignature(List<List<Integer>> universalSetPermutations, Set<Integer> originalSet){[m
+[32m+[m[32m        List<Integer> signatureNumbers = new ArrayList<>();[m
+[32m+[m[32m        for (List<Integer> universalSetPermutation : universalSetPermutations){[m
+[32m+[m[32m            signatureNumbers.add(getMinHashOf(originalSet, universalSetPermutation));[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return new Signature(signatureNumbers);[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    protected static Set<Integer> toUniversalSet(List<Set<Integer>> sets){[m
+[32m+[m[32m        Set<Integer> result = new HashSet<>();[m
+[32m+[m[32m        for (Set<Integer> curSet : sets){[m
+[32m+[m[32m            result.addAll(curSet);[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return result;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    protected static Integer getMinHashOf(Set<Integer> originalSet, List<Integer> universalSetPermutation) {[m
+[32m+[m[32m        if (originalSet == null || universalSetPermutation == null) return null;[m
+[32m+[m[32m        for (Integer universalSetElem : universalSetPermutation){[m
+[32m+[m[32m            for (Integer originalSetElem : originalSet){[m
+[32m+[m[32m                if (originalSetElem.equals(universalSetElem)){[m
+[32m+[m[32m                    return originalSetElem;[m
+[32m+[m[32m                }[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[32m        throw new RuntimeException("Universal set doesn't contain original set element.");[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    protected static List<List<Integer>> permuteSetNTimes(Set<Integer> set, Integer n){[m
+[32m+[m[32m        List<List<Integer>> permutations = new ArrayList<>();[m
+[32m+[m[32m        for (int i = 0; i < n; i++){[m
+[32m+[m[32m            permutations.add(permute(set));[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return permutations;[m
+     }[m
+ [m
+[31m-    protected static Integer calculateFunctionsNumber() {[m
+[31m-        return IBander.BAND_NUMBER * IBander.BAND_SIZE;[m
+[32m+[m[32m    protected static List<Integer> permute(Set<Integer> set){[m
+[32m+[m[32m        List<Integer> l = new ArrayList<>(set.stream().toList());[m
+[32m+[m[32m        Collections.shuffle(l);[m
+[32m+[m[32m        return l;[m
+     }[m
+ [m
+ }[m
+[1mdiff --git a/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/IJaccardCoef.java b/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/IJaccardCoef.java[m
+[1mindex 99c7a2a..9bed59e 100644[m
+[1m--- a/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/IJaccardCoef.java[m
+[1m+++ b/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/IJaccardCoef.java[m
+[36m@@ -4,6 +4,6 @@[m [mimport com.itmo.siaod.min_hash.signatures.ISignature;[m
+ [m
+ public interface IJaccardCoef {[m
+     static Double evalSimilarity(ISignature a, ISignature b){[m
+[31m-        return (double) (ISignature.countIntersected(a, b) / ISignature.countUnited(a, b));[m
+[32m+[m[32m        return ISignature.countIntersected(a, b) / ((double) ISignature.countUnited(a, b));[m
+     }[m
+ }[m
+[1mdiff --git a/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/ISimilarityIdentifier.java b/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/ISimilarityIdentifier.java[m
+[1mindex 8c95730..f99f93b 100644[m
+[1m--- a/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/ISimilarityIdentifier.java[m
+[1m+++ b/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/ISimilarityIdentifier.java[m
+[36m@@ -13,24 +13,8 @@[m [mimport java.util.Set;[m
+ [m
+ public interface ISimilarityIdentifier {[m
+ [m
+[31m-    boolean isSimilar(Set<Integer> a, Set<Integer> b) throws TooBigNumberException;[m
+[32m+[m[32m    //boolean isSimilar(Set<Integer> a, Set<Integer> b) throws TooBigNumberException;[m
+ [m
+     List<List<Integer>> getPreliminarySimilarSetsIndices();[m
+ [m
+[31m-    static IHashTableSiaod distributeSignatures(List<ISignature> signatures) {[m
+[31m-        List<IBand> bands = IBander.splitIntoBands(signatures);[m
+[31m-        List<List<Integer>> bandsHashKeys = IBandToHashKeyMapper.mapBandsToHashKeys(bands);[m
+[31m-        IHashTableSiaod hashTable = new HashTableSiaod(bands.size() * signatures.size());[m
+[31m-        for (int bandIndex = 0; bandIndex < bandsHashKeys.size(); bandIndex++){[m
+[31m-            List<Integer> curBandHashKeys = bandsHashKeys.get(bandIndex);[m
+[31m-            for (int signatureIndex = 0; signatureIndex < signatures.size(); signatureIndex++){[m
+[31m-                try {[m
+[31m-                    hashTable.put(curBandHashKeys.get(signatureIndex), signatureIndex);[m
+[31m-                } catch (TooBigNumberException e){[m
+[31m-                    throw new RuntimeException();[m
+[31m-                }[m
+[31m-            }[m
+[31m-        }[m
+[31m-        return hashTable;[m
+[31m-    }[m
+ }[m
+[1mdiff --git a/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/SimilarityIdentifier.java b/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/SimilarityIdentifier.java[m
+[1mindex 8f2c42c..094ae85 100644[m
+[1m--- a/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/SimilarityIdentifier.java[m
+[1m+++ b/src/main/java/com/itmo/siaod/min_hash/similarity_identifier/SimilarityIdentifier.java[m
+[36m@@ -1,7 +1,11 @@[m
+ package com.itmo.siaod.min_hash.similarity_identifier;[m
+ [m
+ import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;[m
+[32m+[m[32mimport com.itmo.siaod.min_hash.hash_tables.HashTableSiaod;[m
+ import com.itmo.siaod.min_hash.hash_tables.IHashTableSiaod;[m
+[32m+[m[32mimport com.itmo.siaod.min_hash.hash_tables.bands.IBand;[m
+[32m+[m[32mimport com.itmo.siaod.min_hash.hash_tables.bands.IBandToHashKeyMapper;[m
+[32m+[m[32mimport com.itmo.siaod.min_hash.hash_tables.bands.IBander;[m
+ import com.itmo.siaod.min_hash.signatures.IMinHash;[m
+ import com.itmo.siaod.min_hash.signatures.ISignature;[m
+ import com.itmo.siaod.min_hash.signatures.MinHash;[m
+[36m@@ -18,20 +22,13 @@[m [mpublic class SimilarityIdentifier implements ISimilarityIdentifier {[m
+     private IMinHash minHash;[m
+ [m
+     public SimilarityIdentifier(List<Set<Integer>> sets) {[m
+[31m-        this.minHash = new MinHash();[m
+[31m-[m
+[31m-        this.signatures = sets.stream().map(set -> {[m
+[31m-            try {[m
+[31m-                return minHash.getSignatureOf(set);[m
+[31m-            } catch (TooBigNumberException e) {[m
+[31m-                throw new RuntimeException(e);[m
+[31m-            }[m
+[31m-        }).toList();[m
+[32m+[m[32m        this.minHash = new MinHash(sets);[m
+[32m+[m[32m        this.signatures = this.minHash.getSignatures();[m
+         this.preliminarySimilarSignaturesIndices = calculatePreliminarySimilarSetsIndices();[m
+     }[m
+ [m
+     protected List<List<Integer>> calculatePreliminarySimilarSetsIndices() {[m
+[31m-        IHashTableSiaod hashTable = ISimilarityIdentifier.distributeSignatures(signatures);[m
+[32m+[m[32m        IHashTableSiaod hashTable = distributeSignatures(signatures);[m
+         return hashTable.getAllEntries().stream()[m
+                 .map(listOfEntries -> listOfEntries.stream()[m
+                         .map(IEntry::getValue)[m
+[36m@@ -39,11 +36,6 @@[m [mpublic class SimilarityIdentifier implements ISimilarityIdentifier {[m
+                 ).toList();[m
+     }[m
+ [m
+[31m-    @Override[m
+[31m-    public boolean isSimilar(Set<Integer> a, Set<Integer> b) throws TooBigNumberException {[m
+[31m-        return IJaccardCoef.evalSimilarity(minHash.getSignatureOf(a), minHash.getSignatureOf(b)) >= 0.8;[m
+[31m-    }[m
+[31m-[m
+     @Override[m
+     public List<List<Integer>> getPreliminarySimilarSetsIndices() {[m
+         return this.preliminarySimilarSignaturesIndices;[m
+[36m@@ -57,6 +49,24 @@[m [mpublic class SimilarityIdentifier implements ISimilarityIdentifier {[m
+ [m
+             res.append(curSimilarIndices).append("\n");[m
+         }[m
+[31m-        return res.toString();[m
+[32m+[m[32m        String s = res.toString();[m
+[32m+[m[32m        return s.isEmpty() ? "No similarities found" : s;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    protected static IHashTableSiaod distributeSignatures(List<ISignature> signatures) {[m
+[32m+[m[32m        List<IBand> bands = IBander.splitIntoBands(signatures);[m
+[32m+[m[32m        List<List<Integer>> bandsHashKeys = IBandToHashKeyMapper.mapBandsToHashKeys(bands);[m
+[32m+[m[32m        IHashTableSiaod hashTable = new HashTableSiaod(10 * ((int) Math.pow(bands.size() * signatures.size(),2)));[m
+[32m+[m[32m        for (int bandIndex = 0; bandIndex < bandsHashKeys.size(); bandIndex++){[m
+[32m+[m[32m            List<Integer> curBandHashKeys = bandsHashKeys.get(bandIndex);[m
+[32m+[m[32m            for (int signatureIndex = 0; signatureIndex < signatures.size(); signatureIndex++){[m
+[32m+[m[32m                try {[m
+[32m+[m[32m                    hashTable.put(curBandHashKeys.get(signatureIndex), signatureIndex);[m
+[32m+[m[32m                } catch (TooBigNumberException e){[m
+[32m+[m[32m                    throw new RuntimeException();[m
+[32m+[m[32m                }[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m[32m        return hashTable;[m
+     }[m
+ }[m
+[1mdiff --git a/target/classes/Main.class b/target/classes/Main.class[m
+[1mindex 5cd1358..b70fb6f 100644[m
+Binary files a/target/classes/Main.class and b/target/classes/Main.class differ
+[1mdiff --git a/target/classes/com/itmo/siaod/min_hash/hash_tables/HashTableSiaod.class b/target/classes/com/itmo/siaod/min_hash/hash_tables/HashTableSiaod.class[m
+[1mindex ae05e3e..40da72f 100644[m
+Binary files a/target/classes/com/itmo/siaod/min_hash/hash_tables/HashTableSiaod.class and b/target/classes/com/itmo/siaod/min_hash/hash_tables/HashTableSiaod.class differ
+[1mdiff --git a/target/classes/com/itmo/siaod/min_hash/hash_tables/bands/IBandToHashKeyMapper.class b/target/classes/com/itmo/siaod/min_hash/hash_tables/bands/IBandToHashKeyMapper.class[m
+[1mindex bc7bc9d..46b7aab 100644[m
+Binary files a/target/classes/com/itmo/siaod/min_hash/hash_tables/bands/IBandToHashKeyMapper.class and b/target/classes/com/itmo/siaod/min_hash/hash_tables/bands/IBandToHashKeyMapper.class differ
+[1mdiff --git a/target/classes/com/itmo/siaod/min_hash/hash_tables/bands/IBander.class b/target/classes/com/itmo/siaod/min_hash/hash_tables/bands/IBander.class[m
+[1mindex 8270e86..d1fe09b 100644[m
+Binary files a/target/classes/com/itmo/siaod/min_hash/hash_tables/bands/IBander.class and b/target/classes/com/itmo/siaod/min_hash/hash_tables/bands/IBander.class differ
+[1mdiff --git a/target/classes/com/itmo/siaod/min_hash/hash_tables/buckets/Bucket.class b/target/classes/com/itmo/siaod/min_hash/hash_tables/buckets/Bucket.class[m
+[1mdeleted file mode 100644[m
+[1mindex b059306..0000000[m
+Binary files a/target/classes/com/itmo/siaod/min_hash/hash_tables/buckets/Bucket.class and /dev/null differ
+[1mdiff --git a/target/classes/com/itmo/siaod/min_hash/signatures/IMinHash.class b/target/classes/com/itmo/siaod/min_hash/signatures/IMinHash.class[m
+[1mindex 51eb53e..77f3a59 100644[m
+Binary files a/target/classes/com/itmo/siaod/min_hash/signatures/IMinHash.class and b/target/classes/com/itmo/siaod/min_hash/signatures/IMinHash.class differ
+[1mdiff --git a/target/classes/com/itmo/siaod/min_hash/signatures/ISignature.class b/target/classes/com/itmo/siaod/min_hash/signatures/ISignature.class[m
+[1mindex c3adf89..06347b5 100644[m
+Binary files a/target/classes/com/itmo/siaod/min_hash/signatures/ISignature.class and b/target/classes/com/itmo/siaod/min_hash/signatures/ISignature.class differ
+[1mdiff --git a/target/classes/com/itmo/siaod/min_hash/signatures/MinHash.class b/target/classes/com/itmo/siaod/min_hash/signatures/MinHash.class[m
+[1mindex 7aaa651..cfcec43 100644[m
+Binary files a/target/classes/com/itmo/siaod/min_hash/signatures/MinHash.class and b/target/classes/com/itmo/siaod/min_hash/signatures/MinHash.class differ
+[1mdiff --git a/target/classes/com/itmo/siaod/min_hash/similarity_identifier/IJaccardCoef.class b/target/classes/com/itmo/siaod/min_hash/similarity_identifier/IJaccardCoef.class[m
+[1mindex 8948ff5..f260462 100644[m
+Binary files a/target/classes/com/itmo/siaod/min_hash/similarity_identifier/IJaccardCoef.class and b/target/classes/com/itmo/siaod/min_hash/similarity_identifier/IJaccardCoef.class differ
+[1mdiff --git a/target/classes/com/itmo/siaod/min_hash/similarity_identifier/ISimilarityIdentifier.class b/target/classes/com/itmo/siaod/min_hash/similarity_identifier/ISimilarityIdentifier.class[m
+[1mindex f4945c9..8ee6db0 100644[m
+Binary files a/target/classes/com/itmo/siaod/min_hash/similarity_identifier/ISimilarityIdentifier.class and b/target/classes/com/itmo/siaod/min_hash/similarity_identifier/ISimilarityIdentifier.class differ
+[1mdiff --git a/target/classes/com/itmo/siaod/min_hash/similarity_identifier/SimilarityIdentifier.class b/target/classes/com/itmo/siaod/min_hash/similarity_identifier/SimilarityIdentifier.class[m
+[1mindex 19739cb..f733fce 100644[m
+Binary files a/target/classes/com/itmo/siaod/min_hash/similarity_identifier/SimilarityIdentifier.class and b/target/classes/com/itmo/siaod/min_hash/similarity_identifier/SimilarityIdentifier.class differ

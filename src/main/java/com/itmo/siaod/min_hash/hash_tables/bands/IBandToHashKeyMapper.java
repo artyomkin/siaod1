@@ -20,7 +20,11 @@ public interface IBandToHashKeyMapper {
 
         int res = l.getFirst();
         for (int i = 1; i < l.size(); i++){
-            res = res * 10 + l.get(i);
+            int pow = 10;
+            while (l.get(i) >= pow){
+                pow *= 10;
+            }
+            res = res * pow + l.get(i);
         }
         return res;
     }
