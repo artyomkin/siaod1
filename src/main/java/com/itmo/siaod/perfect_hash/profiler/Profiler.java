@@ -50,7 +50,7 @@ public class Profiler {
         HashTableSiaod hashTableSiaod = createHashTableSiaod(keysCount, maxKey);
 
         long timeStart = System.currentTimeMillis();
-        for (int i = 0; i < 100_000; i++) {
+        for (int i = 0; i < 1_000_000; i++) {
             int rndIndex = RandomSiaod.nextInt() % hashTableSiaod.possibleKeys.size();
             int key = hashTableSiaod.possibleKeys.get(rndIndex);
             int val = RandomSiaod.nextInt() % 1000 + 1000;
@@ -68,10 +68,10 @@ public class Profiler {
 
     public static void profilePerfectHash() throws TooBigNumberException, CollisionException {
         Profiler profiler = new Profiler();
-        int keysCountInit = 10_000;
-        int maxKeyInit = 10_000;
-        int iterations = 30;
-        int steps = 30;
+        int keysCountInit = 200_000;
+        int maxKeyInit = 600_000;
+        int iterations = 10;
+        int steps = 10;
 
         ArrayList<ProfilingReport> avgReps = new ArrayList<>();
         for (int i = 1; i < iterations + 1; i++) {
@@ -80,8 +80,8 @@ public class Profiler {
             ArrayList<ProfilingReport> iterationReps = new ArrayList<>();
             System.out.println(iterations - i + " profiling iterations left..");
             for (int j = 0; j < steps; j++) {
-                ProfilingReport rep = profiler.profileHashTableSiaodBuild(keysCount, maxKey);
-                //ProfilingReport rep = profiler.profileHashTableSiaodOperations(keysCount, maxKey);
+                //ProfilingReport rep = profiler.profileHashTableSiaodBuild(keysCount, maxKey);
+                ProfilingReport rep = profiler.profileHashTableSiaodOperations(keysCount, maxKey);
                 iterationReps.add(rep);
             }
             avgReps.add(ProfilingReport.toAvg(iterationReps));
