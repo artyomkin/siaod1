@@ -71,7 +71,7 @@ public class Profiler {
         int keysCountInit = 200_000;
         int maxKeyInit = 600_000;
         int iterations = 10;
-        int steps = 10;
+        int steps = 30;
 
         ArrayList<ProfilingReport> avgReps = new ArrayList<>();
         for (int i = 1; i < iterations + 1; i++) {
@@ -80,8 +80,8 @@ public class Profiler {
             ArrayList<ProfilingReport> iterationReps = new ArrayList<>();
             System.out.println(iterations - i + " profiling iterations left..");
             for (int j = 0; j < steps; j++) {
-                //ProfilingReport rep = profiler.profileHashTableSiaodBuild(keysCount, maxKey);
-                ProfilingReport rep = profiler.profileHashTableSiaodOperations(keysCount, maxKey);
+                ProfilingReport rep = profiler.profileHashTableSiaodBuild(keysCount, maxKey);
+                //ProfilingReport rep = profiler.profileHashTableSiaodOperations(keysCount, maxKey);
                 iterationReps.add(rep);
             }
             avgReps.add(ProfilingReport.toAvg(iterationReps));

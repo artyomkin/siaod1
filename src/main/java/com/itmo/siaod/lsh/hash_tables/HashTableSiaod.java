@@ -13,7 +13,7 @@ import java.util.List;
 public class HashTableSiaod implements IHashTableSiaod {
 
     private final List<IBucket> buckets;
-    private final IUniversalHashFunction hashFunction;
+    protected final IUniversalHashFunction hashFunction;
 
     public HashTableSiaod(Integer bucketsNumber) {
         this.hashFunction = new UniversalLinearLimitedHashFunction(bucketsNumber);
@@ -55,7 +55,7 @@ public class HashTableSiaod implements IHashTableSiaod {
         return entries;
     }
 
-    private void ensureBucketExists(Integer index){
+    protected void ensureBucketExists(Integer index){
         if (this.buckets.get(index) == null){
             this.buckets.set(index, new SetBucket());
         }

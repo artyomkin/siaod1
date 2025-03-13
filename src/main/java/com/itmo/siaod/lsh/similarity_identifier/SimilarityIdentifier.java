@@ -18,14 +18,14 @@ public class SimilarityIdentifier implements ISimilarityIdentifier {
     private List<List<Boolean>> signatures;
     private LSH lsh;
 
-    public SimilarityIdentifier(List<Point> points) {
+    public SimilarityIdentifier(List<Point> points, List<Double> timings) {
         this.lsh = new LSH(points);
         this.signatures = this.lsh.getSignatures();
-        this.preliminarySimilarSignaturesIndices = calculatePreliminarySimilarIndices();
+        this.preliminarySimilarSignaturesIndices = calculatePreliminarySimilarIndices(timings);
     }
 
-    protected List<List<Integer>> calculatePreliminarySimilarIndices() {
-        IHashTableSiaod hashTable = distributeSignatures(signatures);
+    protected List<List<Integer>> calculatePreliminarySimilarIndices(List<Double> timings) {
+        IHashTableSiaod hashTable = distributeSignatures(signatures, timings);
         return hashTable.getAllEntries().stream()
                 .map(listOfEntries -> listOfEntries.stream()
                         .map(IEntry::getValue)
@@ -50,11 +50,16 @@ public class SimilarityIdentifier implements ISimilarityIdentifier {
         return s.isEmpty() ? "No similarities found" : s;
     }
 
-    protected static IHashTableSiaod distributeSignatures(List<List<Boolean>> signatures) {
+    protected static IHashTableSiaod distributeSignatures(List<List<Boolean>> signatures, List<Double> timings) {
+        Double start = (double) System.currentTimeMillis();
         List<IBand> bands = IBander.splitIntoBands(signatures);
+        Double splitBandsEnd = (double) System.currentTimeMillis();
         List<List<Integer>> bandsHashKeys = IBandToHashKeyMapper.mapBandsToHashKeys(bands);
+        Double mapHashKeysEnd = (double) System.currentTimeMillis();
         IHashTableSiaod hashTable = new HashTableSiaod(10 * bands.size() * signatures.size());
-        for (List<Integer> curBandHashKeys : bandsHashKeys) {
+        Double hashTableInitEnd = (double) System.currentTimeMillis();
+        for (int i = 0; i < bandsHashKeys.size(); i++){
+            List<Integer> curBandHashKeys = bandsHashKeys.get(i);
             for (int signatureIndex = 0; signatureIndex < signatures.size(); signatureIndex++) {
                 try {
                     hashTable.put(curBandHashKeys.get(signatureIndex), signatureIndex);
@@ -63,6 +68,12 @@ public class SimilarityIdentifier implements ISimilarityIdentifier {
                 }
             }
         }
+        Double distributeEnd = (double) System.currentTimeMillis();
+        double splitBands = splitBandsEnd - start;
+        double mapHashKeys = mapHashKeysEnd - splitBandsEnd;
+        double hashTableInit = hashTableInitEnd - mapHashKeysEnd;
+        double distribute = distributeEnd - hashTableInitEnd;
+        timings.addAll(List.of(splitBands, mapHashKeys, hashTableInit, distribute));
         return hashTable;
     }
 }

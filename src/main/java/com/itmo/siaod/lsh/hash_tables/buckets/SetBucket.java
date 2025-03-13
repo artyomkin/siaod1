@@ -16,9 +16,9 @@ public class SetBucket implements IBucket {
 
     @Override
     public boolean put(Integer key, Integer val) {
-        boolean entriesContainKeyVal = this.entries.stream()
-                .anyMatch(entry -> entry.getKey().equals(key) && entry.getValue().equals(val));
-        if (entriesContainKeyVal) return false;
+        //boolean entriesContainKeyVal = this.entries.stream()
+        //        .anyMatch(entry -> entry.getKey().equals(key) && entry.getValue().equals(val));
+        //if (entriesContainKeyVal) return false;
 
         this.entries.add(new Entry(key, val));
         return true;
