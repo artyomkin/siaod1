@@ -1,4 +1,4 @@
-package com.itmo.siaod.perfect_hash.profiler;
+package com.itmo.siaod.profiler;
 
 import java.util.ArrayList;
 
@@ -33,7 +33,7 @@ public class ProfilingReport {
         rep.memoryUsedMB = reps.stream().mapToDouble(report -> report.memoryUsedMB).average().getAsDouble();
         rep.elapsedTimeSeconds = reps.stream().mapToDouble(report -> report.elapsedTimeSeconds).average().getAsDouble();
         rep.keysCount = (int) reps.stream().mapToInt(report -> report.keysCount).average().getAsDouble();
-        rep.maxKey = (int) reps.stream().mapToInt(report -> report.maxKey).average().getAsDouble();
+        rep.maxKey = (int) reps.stream().mapToInt(report -> report.maxKey != null ? report.maxKey : 0).average().getAsDouble();
         return rep;
     }
 }

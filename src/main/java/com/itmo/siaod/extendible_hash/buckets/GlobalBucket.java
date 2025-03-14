@@ -1,8 +1,10 @@
 package com.itmo.siaod.extendible_hash.buckets;
 
+import com.itmo.siaod.extendible_hash.buckets.entries.Entry;
 import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
 import com.itmo.siaod.extendible_hash.hash_tables.IGlobalBucket;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,7 +87,14 @@ public class GlobalBucket implements IGlobalBucket  {
 
     @Override
     public List<List<IEntry>> getEntries() {
-        return Arrays.stream(this.localBuckets).map(ILocalBucket::getAll).toList();
+        List<List<IEntry>> entries = new ArrayList<>();
+        for (ILocalBucket b : localBuckets){
+            if (b == null) {
+                continue;
+            }
+            entries.add(b.getAll());
+        }
+        return entries;
     }
 
 }

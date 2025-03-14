@@ -98,8 +98,8 @@ public class HashTableSiaod implements IHashTableSiaod {
     public String toString(){
 <span class="fc" id="L99">        String res = &quot;&quot;;</span>
 <span class="fc bfc" id="L100" title="All 2 branches covered.">        for (int i = 0; i &lt; this.buckets.size(); i++) {</span>
-<span class="pc bpc" id="L101" title="1 of 2 branches missed.">            if (this.buckets.get(i) == null) {</span>
-<span class="nc" id="L102">                res = res + &quot; &quot; + i + &quot;: null&quot; + &quot;\n &quot;;</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">            if (this.buckets.get(i) == null) {</span>
+<span class="fc" id="L102">                res = res + &quot; &quot; + i + &quot;: null&quot; + &quot;\n &quot;;</span>
             } else {
 <span class="pc bpc" id="L104" title="1 of 2 branches missed.">                res = res + &quot; &quot; + (this.buckets.get(i).isSimple() ? &quot;simple&quot; : &quot;hashTable&quot;) + &quot; &quot; + i + &quot;: &quot; + this.buckets.get(i).toString() + &quot;\n &quot;;</span>
             }

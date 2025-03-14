@@ -35,8 +35,8 @@ public class UniversalLinearTableHashFunction implements IUniversalHashFunction 
 
     protected void shuffleCoefficients() throws TooBigNumberException {
 <span class="fc" id="L37">        a = RandomSiaod.nextInt() % p;</span>
-<span class="fc bfc" id="L38" title="All 2 branches covered.">        if (a == 0){</span>
-<span class="fc" id="L39">            a = 1L;</span>
+<span class="pc bpc" id="L38" title="1 of 2 branches missed.">        if (a == 0){</span>
+<span class="nc" id="L39">            a = 1L;</span>
         }
 <span class="pc bpc" id="L41" title="1 of 2 branches missed.">        if (a &lt; 0){</span>
 <span class="nc" id="L42">            throw new TooBigNumberException(&quot;a number is negative.&quot;);</span>

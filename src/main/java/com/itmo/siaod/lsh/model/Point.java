@@ -46,4 +46,13 @@ public class Point {
     public String toString(){
         return "(" + String.valueOf(this.x) + "; " + String.valueOf(this.y) + ")";
     }
+
+    @Override
+    public boolean equals(Object o){
+        if (!this.getClass().isAssignableFrom(o.getClass())){
+            return false;
+        }
+        Point p = (Point) o;
+        return p.x == this.x && p.y == this.y;
+    }
 }

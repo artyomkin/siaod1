@@ -4,7 +4,7 @@ lab1,com.itmo.siaod.lsh.model,Point,3,91,0,2,1,20,1,8,1,7
 lab1,com.itmo.siaod.lsh.model,GeneralLine,0,119,1,13,0,22,1,10,0,4
 lab1,com.itmo.siaod.lsh.model,PointCenterer,0,92,1,5,0,14,1,8,0,6
 lab1,com.itmo.siaod.lsh.model,ILine.Location,0,21,0,0,0,4,0,1,0,1
-lab1,com.itmo.siaod.perfect_hash.hash_functions,UniversalLinearTableHashFunction,20,102,5,7,4,17,5,4,0,3
+lab1,com.itmo.siaod.perfect_hash.hash_functions,UniversalLinearTableHashFunction,24,98,6,6,5,16,6,3,0,3
 lab1,com.itmo.siaod.lsh.lsh,LSH,0,103,0,4,0,14,0,6,0,4
 lab1,com.itmo.siaod.extendible_hash.buckets,LocalBucket,5,86,3,7,2,19,3,9,0,7
 lab1,com.itmo.siaod.extendible_hash.buckets,GlobalBucket,11,223,4,14,1,38,5,15,1,10
@@ -14,7 +14,7 @@ lab1,com.itmo.siaod.perfect_hash.exceptions,TooBigNumberException,4,3,0,0,2,2,1,
 lab1,com.itmo.siaod.extendible_hash.buckets.entries,Entry,3,23,0,0,1,10,1,5,1,5
 lab1,com.itmo.siaod.perfect_hash.prime_numbers,IDeterministicMillerRabinTest,12,296,3,47,0,34,3,26,0,4
 lab1,com.itmo.siaod.perfect_hash.prime_numbers,IPrimeGenerator,0,74,0,14,0,13,0,9,0,2
-lab1,com.itmo.siaod.perfect_hash.hash_tables,HashTableSiaod,12,274,4,24,2,47,4,20,0,10
+lab1,com.itmo.siaod.perfect_hash.hash_tables,HashTableSiaod,7,279,3,25,1,48,3,21,0,10
 lab1,com.itmo.siaod.extendible_hash.hash_tables,HashTableSiaod,4,24,0,0,1,6,1,4,1,4
 lab1,com.itmo.siaod.lsh.similarity_identifier,SimilarityIdentifier,7,227,1,11,2,45,1,11,0,6
 lab1,com.itmo.siaod.lsh.hash_tables.bands,IBander,2,47,1,5,1,12,1,4,0,2
