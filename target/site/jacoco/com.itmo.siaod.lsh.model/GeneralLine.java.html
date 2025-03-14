@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GeneralLine.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.lsh.model</a> &gt; <span class="el_source">GeneralLine.java</span></div><h1>GeneralLine.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.lsh.model;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class GeneralLine implements ILine {
+    public double A;
+    public double B;
+    public double C;
+
+<span class="fc" id="L12">    public GeneralLine(Double distance) {</span>
+        do {
+<span class="fc" id="L14">            Point p1 = new Point(distance);</span>
+<span class="fc" id="L15">            Point p2 = new Point(distance);</span>
+<span class="fc" id="L16">            this.A = p2.y - p1.y;</span>
+<span class="fc" id="L17">            this.B = p1.x - p2.x;</span>
+<span class="fc" id="L18">            this.C = -1 * this.A * p2.x - this.B * p2.y;</span>
+<span class="pc bpc" id="L19" title="1 of 2 branches missed.">        } while (this.B == 0d);</span>
+<span class="fc" id="L20">    }</span>
+
+
+    public double f(double x, double y){
+<span class="fc" id="L24">        return A * x + B * y + C;</span>
+    }
+
+    @Override
+    public ILine.Location getLocation(double x, double y) {
+<span class="fc" id="L29">        double f0 = f(x, y);</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        if (f0 == 0) {</span>
+<span class="fc" id="L31">            return ILine.Location.COLLINEAR;</span>
+        }
+
+<span class="fc bfc" id="L34" title="All 2 branches covered.">        boolean isUpper = this.B &gt; 0;</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (f0 &lt; 0){</span>
+<span class="fc bfc" id="L36" title="All 2 branches covered.">            isUpper = !isUpper;</span>
+        }
+
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        if (isUpper){</span>
+<span class="fc" id="L40">            return ILine.Location.UPPER;</span>
+        } else {
+<span class="fc" id="L42">            return ILine.Location.LOWER;</span>
+        }
+
+    }
+
+    public static List&lt;ILine&gt; generateLines(int numberOfLines, double distance) {
+<span class="fc" id="L48">        List&lt;ILine&gt; lines = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        for (int i = 0; i &lt; numberOfLines; i++){</span>
+<span class="fc" id="L50">            lines.add(new GeneralLine(distance));</span>
+        }
+<span class="fc" id="L52">        return lines;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

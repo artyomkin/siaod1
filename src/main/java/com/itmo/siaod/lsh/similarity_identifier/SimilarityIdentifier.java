@@ -7,9 +7,11 @@ import com.itmo.siaod.lsh.hash_tables.bands.IBand;
 import com.itmo.siaod.lsh.hash_tables.bands.IBandToHashKeyMapper;
 import com.itmo.siaod.lsh.hash_tables.bands.IBander;
 import com.itmo.siaod.lsh.model.Point;
-import com.itmo.siaod.lsh.signatures.LSH;
+import com.itmo.siaod.lsh.lsh.LSH;
+import com.itmo.siaod.lsh.model.PointCenterer;
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SimilarityIdentifier implements ISimilarityIdentifier {
@@ -17,9 +19,14 @@ public class SimilarityIdentifier implements ISimilarityIdentifier {
     private List<List<Integer>> preliminarySimilarSignaturesIndices;
     private List<List<Boolean>> signatures;
     private LSH lsh;
+    private List<Point> centeredPoints;
+    private PointCenterer pointCenterer;
 
     public SimilarityIdentifier(List<Point> points, List<Double> timings) {
-        this.lsh = new LSH(points);
+        this.pointCenterer = new PointCenterer(points);
+        this.centeredPoints = this.pointCenterer.getCenteredPoints();
+        List<Point> centeredPoints = this.pointCenterer.getCenteredPoints();
+        this.lsh = new LSH(centeredPoints);
         this.signatures = this.lsh.getSignatures();
         this.preliminarySimilarSignaturesIndices = calculatePreliminarySimilarIndices(timings);
     }
@@ -43,8 +50,11 @@ public class SimilarityIdentifier implements ISimilarityIdentifier {
         StringBuilder res = new StringBuilder();
         for (List<Integer> curSimilarIndices : preliminarySimilarSignaturesIndices) {
             if (curSimilarIndices.size() < 2) continue;
-
-            res.append(curSimilarIndices).append("\n");
+            ArrayList<String> rowArr = new ArrayList<>();
+            for (Integer index : curSimilarIndices){
+                rowArr.add(this.pointCenterer.uncenterPoint(this.centeredPoints.get(index)).toString());
+            }
+            res.append(String.join(", ", rowArr)).append("\n");
         }
         String s = res.toString();
         return s.isEmpty() ? "No similarities found" : s;

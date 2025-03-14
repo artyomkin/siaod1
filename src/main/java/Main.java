@@ -47,7 +47,8 @@ public class Main {
         //for (int i = 0; i < allTimings.size(); i++){
         //    System.out.println(avgs(allTimings.get(i)));
         //}
-        List<Point> points = Point.generateRandomPoints(1_000_000, 100_000_000);
+        //List<Point> points = Point.generateRandomPoints(1_000_000, 100_000_000);
+        List<Point> points = List.of(new Point(800,800), new Point(801,801), new Point(1000, 1000));
         List<Double> timings = new ArrayList<>();
         ISimilarityIdentifier similarityIdentifier = new SimilarityIdentifier(points, timings);
         System.out.println(similarityIdentifier.toString());

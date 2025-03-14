@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SetBucket.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.lsh.hash_tables.buckets</a> &gt; <span class="el_source">SetBucket.java</span></div><h1>SetBucket.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.lsh.hash_tables.buckets;
+
+import com.itmo.siaod.extendible_hash.buckets.entries.Entry;
+import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SetBucket implements IBucket {
+
+    private List&lt;IEntry&gt; entries;
+
+<span class="fc" id="L13">    public SetBucket() {</span>
+<span class="fc" id="L14">        this.entries = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L15">    }</span>
+
+    @Override
+    public boolean put(Integer key, Integer val) {
+        //boolean entriesContainKeyVal = this.entries.stream()
+        //        .anyMatch(entry -&gt; entry.getKey().equals(key) &amp;&amp; entry.getValue().equals(val));
+        //if (entriesContainKeyVal) return false;
+
+<span class="fc" id="L23">        this.entries.add(new Entry(key, val));</span>
+<span class="fc" id="L24">        return true;</span>
+    }
+
+    @Override
+    public boolean delete(Integer key) {
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">        for (int i = 0; i &lt; entries.size(); i++){</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">            if (this.entries.get(i).getKey().equals(key)){</span>
+<span class="fc" id="L31">                this.entries.remove(i);</span>
+<span class="fc" id="L32">                return true;</span>
+            }
+        }
+<span class="nc" id="L35">        return false;</span>
+    }
+
+    @Override
+    public Integer get(Integer key) {
+<span class="fc bfc" id="L40" title="All 2 branches covered.">        for (int i = 0; i &lt; entries.size(); i++){</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            if (this.entries.get(i).getKey().equals(key)){</span>
+<span class="fc" id="L42">                return this.entries.get(i).getValue();</span>
+            }
+        }
+<span class="fc" id="L45">        return null;</span>
+    }
+
+    @Override
+    public List&lt;IEntry&gt; getAll() {
+<span class="fc" id="L50">        return this.entries;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

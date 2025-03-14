@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HashTableSiaod.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.lsh.hash_tables</a> &gt; <span class="el_source">HashTableSiaod.java</span></div><h1>HashTableSiaod.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.lsh.hash_tables;
+
+import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
+import com.itmo.siaod.lsh.hash_functions.UniversalLinearLimitedHashFunction;
+import com.itmo.siaod.lsh.hash_tables.buckets.SetBucket;
+import com.itmo.siaod.lsh.hash_tables.buckets.IBucket;
+import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
+import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class HashTableSiaod implements IHashTableSiaod {
+
+    private final List&lt;IBucket&gt; buckets;
+    protected final IUniversalHashFunction hashFunction;
+
+<span class="fc" id="L18">    public HashTableSiaod(Integer bucketsNumber) {</span>
+<span class="fc" id="L19">        this.hashFunction = new UniversalLinearLimitedHashFunction(bucketsNumber);</span>
+<span class="fc" id="L20">        this.buckets = new ArrayList&lt;&gt;(bucketsNumber);</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        for (int i = 0; i &lt; bucketsNumber; i++){</span>
+<span class="fc" id="L22">            this.buckets.add(null);</span>
+        }
+<span class="fc" id="L24">    }</span>
+
+    @Override
+    public boolean put(Integer key, Integer value) throws TooBigNumberException {
+<span class="fc" id="L28">        int index = Math.toIntExact(this.hashFunction.hash(key));</span>
+<span class="fc" id="L29">        ensureBucketExists(index);</span>
+<span class="fc" id="L30">        return this.buckets.get(index).put(key, value);</span>
+    }
+
+    @Override
+    public boolean delete(Integer key) throws TooBigNumberException {
+<span class="fc" id="L35">        int index = Math.toIntExact(this.hashFunction.hash(key));</span>
+<span class="fc" id="L36">        ensureBucketExists(index);</span>
+<span class="fc" id="L37">        return this.buckets.get(index).delete(key);</span>
+    }
+
+    @Override
+    public Integer get(Integer key) throws TooBigNumberException {
+<span class="fc" id="L42">        int index = Math.toIntExact(this.hashFunction.hash(key));</span>
+<span class="fc" id="L43">        ensureBucketExists(index);</span>
+<span class="fc" id="L44">        return this.buckets.get(index).get(key);</span>
+    }
+
+    @Override
+    public List&lt;List&lt;IEntry&gt;&gt; getAllEntries() {
+<span class="fc" id="L49">        List&lt;List&lt;IEntry&gt;&gt; entries = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (int i = 0; i &lt; buckets.size(); i++){</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">            if (this.buckets.get(i) != null){</span>
+<span class="fc" id="L52">                entries.add(this.buckets.get(i).getAll());</span>
+            }
+        }
+<span class="fc" id="L55">        return entries;</span>
+    }
+
+    protected void ensureBucketExists(Integer index){
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (this.buckets.get(index) == null){</span>
+<span class="fc" id="L60">            this.buckets.set(index, new SetBucket());</span>
+        }
+<span class="fc" id="L62">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

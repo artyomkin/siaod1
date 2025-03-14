@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PointCenterer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.lsh.model</a> &gt; <span class="el_source">PointCenterer.java</span></div><h1>PointCenterer.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.lsh.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class PointCenterer {
+
+    List&lt;Point&gt; centeredPoints;
+    double avgX;
+    double avgY;
+
+<span class="fc" id="L12">    public PointCenterer(List&lt;Point&gt; points){</span>
+<span class="fc" id="L13">        this.centeredPoints = centerPoints(points);</span>
+<span class="fc" id="L14">    }</span>
+
+    private List&lt;Point&gt; centerPoints(List&lt;Point&gt; points){
+<span class="pc bpc" id="L17" title="1 of 4 branches missed.">        if (points == null || points.isEmpty()){</span>
+<span class="fc" id="L18">            return points;</span>
+        }
+<span class="fc" id="L20">        this.avgX = points.stream().mapToDouble(p -&gt; p.x).average().getAsDouble();</span>
+<span class="fc" id="L21">        this.avgY = points.stream().mapToDouble(p -&gt; p.y).average().getAsDouble();</span>
+<span class="fc" id="L22">        List&lt;Point&gt; resPoints = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        for (int i = 0; i &lt; points.size(); i++){</span>
+<span class="fc" id="L24">            Point newPoint = new Point(points.get(i).x-avgX, points.get(i).y-avgY);</span>
+<span class="fc" id="L25">            resPoints.add(newPoint);</span>
+        }
+<span class="fc" id="L27">        return resPoints;</span>
+    }
+
+    public List&lt;Point&gt; getCenteredPoints(){
+<span class="fc" id="L31">        return this.centeredPoints;</span>
+    }
+
+    public Point uncenterPoint(Point p){
+<span class="fc" id="L35">        return new Point(p.x + avgX, p.y + avgY);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -8,11 +8,11 @@ public interface IBandToHashKeyMapper {
         return bands.stream().map(IBandToHashKeyMapper::mapBandToHashKey).toList();
     };
 
-    private static List<Integer> mapBandToHashKey(IBand band) {
+    static List<Integer> mapBandToHashKey(IBand band) {
         return band.getBand().stream().map(IBandToHashKeyMapper::hashList).toList();
     }
 
-    private static Integer hashList(List<Boolean> l) {
+    static Integer hashList(List<Boolean> l) {
         if (l == null || l.isEmpty()) return null;
 
         int result = 0;

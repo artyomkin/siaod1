@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IBander.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.lsh.hash_tables.bands</a> &gt; <span class="el_source">IBander.java</span></div><h1>IBander.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.lsh.hash_tables.bands;
+
+import com.itmo.siaod.lsh.exceptions.IncorrectBandException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public interface IBander {
+
+<span class="fc" id="L10">    Integer BAND_SIZE = 30;</span>
+<span class="fc" id="L11">    Integer BAND_NUMBER = 100;</span>
+
+    static List&lt;IBand&gt; splitIntoBands(List&lt;List&lt;Boolean&gt;&gt; signatures) {
+<span class="pc bpc" id="L14" title="1 of 2 branches missed.">        if (signatures == null){</span>
+<span class="nc" id="L15">            return null;</span>
+        }
+<span class="fc bfc" id="L17" title="All 2 branches covered.">        if (signatures.isEmpty()){</span>
+<span class="fc" id="L18">            return new ArrayList&lt;&gt;();</span>
+        }
+<span class="fc" id="L20">        List&lt;IBand&gt; bands = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L21" title="All 2 branches covered.">        for (int i = 0; i &lt; BAND_NUMBER; i++) {</span>
+            try {
+<span class="fc" id="L23">                bands.add(new Band(signatures, BAND_SIZE * i, BAND_SIZE));</span>
+<span class="fc" id="L24">            } catch (IncorrectBandException e) {</span>
+<span class="fc" id="L25">                return null;</span>
+<span class="fc" id="L26">            }</span>
+        }
+<span class="fc" id="L28">        return bands;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

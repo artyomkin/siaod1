@@ -11,6 +11,12 @@ public interface IBander {
     Integer BAND_NUMBER = 100;
 
     static List<IBand> splitIntoBands(List<List<Boolean>> signatures) {
+        if (signatures == null){
+            return null;
+        }
+        if (signatures.isEmpty()){
+            return new ArrayList<>();
+        }
         List<IBand> bands = new ArrayList<>();
         for (int i = 0; i < BAND_NUMBER; i++) {
             try {

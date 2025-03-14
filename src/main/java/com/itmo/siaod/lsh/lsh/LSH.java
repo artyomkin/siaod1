@@ -1,4 +1,4 @@
-package com.itmo.siaod.lsh.signatures;
+package com.itmo.siaod.lsh.lsh;
 
 import com.itmo.siaod.lsh.model.GeneralLine;
 import com.itmo.siaod.lsh.model.ILine;
@@ -32,6 +32,5 @@ public class LSH {
     public List<List<Boolean>> getSignatures(){
         return this.signatures;
     }
-
 
 }

@@ -41,4 +41,9 @@ public class Point {
     private Double generateRandomX(double minX, double maxX){
         return minX + (maxX - minX) * rnd.nextDouble();
     }
+
+    @Override
+    public String toString(){
+        return "(" + String.valueOf(this.x) + "; " + String.valueOf(this.y) + ")";
+    }
 }

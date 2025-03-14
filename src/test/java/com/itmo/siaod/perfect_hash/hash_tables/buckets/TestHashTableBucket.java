@@ -2,6 +2,7 @@ package com.itmo.siaod.perfect_hash.hash_tables.buckets;
 
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
 import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearTableHashFunction;
+import com.itmo.siaod.perfect_hash.hash_tables.HashTableSiaod;
 import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
 import org.junit.jupiter.api.BeforeEach;
@@ -88,5 +89,16 @@ public class TestHashTableBucket {
         assertEquals((int)this.bucket.get(possibleKeys.getFirst()), 10);
         this.bucket.delete(possibleKeys.getFirst());
         assertNull(this.bucket.get(possibleKeys.getFirst()));
+    }
+
+    @Test
+    public void testPutKey() throws TooBigNumberException {
+        this.bucket.putKey(1,2);
+        assertEquals(this.bucket.get(1), 2);
+    }
+
+    @Test
+    public void testGetSize() throws TooBigNumberException {
+        assertTrue(this.bucket.getSize() < 20 * Math.pow(this.possibleKeys.size(), 2) && this.bucket.getSize() >= 1.2 * Math.pow(this.possibleKeys.size(), 2));
     }
 }

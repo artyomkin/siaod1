@@ -2,7 +2,7 @@
 
 import com.itmo.siaod.perfect_hash.hash_tables.ISimpleBucket;
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
-import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearHashFunction;
+import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearTableHashFunction;
 import com.itmo.siaod.perfect_hash.hash_tables.IBucket;
 import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
@@ -20,7 +20,7 @@ public class HashTableBucket implements IBucket {
 
     @Override
     public boolean putKey(Integer key, Integer val) throws TooBigNumberException {
-<span class="nc" id="L23">        return put(key, val);</span>
+<span class="fc" id="L23">        return put(key, val);</span>
     }
 
     @Override
@@ -42,7 +42,7 @@ public class HashTableBucket implements IBucket {
 
     @Override
     public int getSize() {
-<span class="nc" id="L45">        return this.hashTable.size();</span>
+<span class="fc" id="L45">        return this.hashTable.size();</span>
     }
 
     @Override
@@ -66,7 +66,7 @@ public class HashTableBucket implements IBucket {
 
     @Override
     public String toString() {
-<span class="fc" id="L69">        return this.hashTable.toString();</span>
+<span class="nc" id="L69">        return this.hashTable.toString();</span>
     }
 
     protected int genHashTableSize(Integer keysCount) {
@@ -99,8 +99,8 @@ public class HashTableBucket implements IBucket {
 <span class="fc" id="L99">        return function;</span>
     }
 
-    protected UniversalLinearHashFunction shuffleFunction(ArrayList&lt;Integer&gt; keysArr, int hashTableSize) throws TooBigNumberException {
-<span class="fc" id="L103">        return new UniversalLinearHashFunction(keysArr, hashTableSize);</span>
+    protected UniversalLinearTableHashFunction shuffleFunction(ArrayList&lt;Integer&gt; keysArr, int hashTableSize) throws TooBigNumberException {
+<span class="fc" id="L103">        return new UniversalLinearTableHashFunction(keysArr, hashTableSize);</span>
     }
 
     protected boolean doesFunctionMakeCollisions(ArrayList&lt;Integer&gt; keysArr, IUniversalHashFunction function) throws TooBigNumberException {

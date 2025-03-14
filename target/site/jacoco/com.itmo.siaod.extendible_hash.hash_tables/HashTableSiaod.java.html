@@ -2,28 +2,37 @@
 
 import com.itmo.siaod.extendible_hash.IHashTableSiaod;
 import com.itmo.siaod.extendible_hash.buckets.GlobalBucket;
+import com.itmo.siaod.extendible_hash.buckets.ILocalBucket;
+import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
+
+import java.util.List;
 
 public class HashTableSiaod implements IHashTableSiaod {
 
     private IGlobalBucket globalBucket;
 
-<span class="fc" id="L10">    public HashTableSiaod(){</span>
-<span class="fc" id="L11">        this.globalBucket = new GlobalBucket();</span>
-<span class="fc" id="L12">    }</span>
+<span class="fc" id="L14">    public HashTableSiaod(){</span>
+<span class="fc" id="L15">        this.globalBucket = new GlobalBucket();</span>
+<span class="fc" id="L16">    }</span>
 
     @Override
     public boolean put(Integer key, Integer value) {
-<span class="fc" id="L16">        return this.globalBucket.put(key, value);</span>
+<span class="fc" id="L20">        return this.globalBucket.put(key, value);</span>
     }
 
     @Override
     public Integer get(Integer key) {
-<span class="fc" id="L21">        return this.globalBucket.get(key);</span>
+<span class="fc" id="L25">        return this.globalBucket.get(key);</span>
     }
 
     @Override
     public boolean delete(Integer key) {
-<span class="fc" id="L26">        return this.globalBucket.delete(key);</span>
+<span class="fc" id="L30">        return this.globalBucket.delete(key);</span>
+    }
+
+    @Override
+    public List&lt;List&lt;IEntry&gt;&gt; getAllEntries() {
+<span class="nc" id="L35">        return this.globalBucket.getEntries();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

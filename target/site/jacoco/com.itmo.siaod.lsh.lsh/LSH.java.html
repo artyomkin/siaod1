@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LSH.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.lsh.lsh</a> &gt; <span class="el_source">LSH.java</span></div><h1>LSH.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.lsh.lsh;
+
+import com.itmo.siaod.lsh.model.GeneralLine;
+import com.itmo.siaod.lsh.model.ILine;
+import com.itmo.siaod.lsh.model.Point;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+public class LSH {
+
+    private List&lt;ILine&gt; lines;
+    private List&lt;List&lt;Boolean&gt;&gt; signatures;
+<span class="fc" id="L15">    private int NUMBER_OF_LINES = 3000;</span>
+
+<span class="fc" id="L17">    public LSH(List&lt;Point&gt; points){</span>
+<span class="fc" id="L18">        double maxX = points.stream().map(p -&gt; Math.abs(p.x)).max(Comparator.naturalOrder()).get();</span>
+<span class="fc" id="L19">        double maxY = points.stream().map(p -&gt; Math.abs(p.y)).max(Comparator.naturalOrder()).get();</span>
+<span class="fc" id="L20">        double maxDistance = Math.max(maxX, maxY);</span>
+<span class="fc" id="L21">        this.lines = GeneralLine.generateLines(NUMBER_OF_LINES, maxDistance);</span>
+<span class="fc" id="L22">        this.signatures = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">        for (int i = 0; i &lt; points.size(); i++){</span>
+<span class="fc" id="L24">            this.signatures.add(new ArrayList&lt;&gt;());</span>
+<span class="fc" id="L25">            Point p = points.get(i);</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">            for (int j = 0; j &lt; lines.size(); j++){</span>
+<span class="fc" id="L27">                this.signatures.get(i).add(lines.get(j).getLocation(p.x, p.y).equals(ILine.Location.UPPER));</span>
+            }
+        }
+<span class="fc" id="L30">    }</span>
+
+    public List&lt;List&lt;Boolean&gt;&gt; getSignatures(){
+<span class="fc" id="L33">        return this.signatures;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

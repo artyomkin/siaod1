@@ -50,7 +50,7 @@ import org.openjdk.jol.info.ClassLayout;
 <span class="nc" id="L50">        HashTableSiaod hashTableSiaod = createHashTableSiaod(keysCount, maxKey);</span>
 
 <span class="nc" id="L52">        long timeStart = System.currentTimeMillis();</span>
-<span class="nc bnc" id="L53" title="All 2 branches missed.">        for (int i = 0; i &lt; 100_000; i++) {</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        for (int i = 0; i &lt; 1_000_000; i++) {</span>
 <span class="nc" id="L54">            int rndIndex = RandomSiaod.nextInt() % hashTableSiaod.possibleKeys.size();</span>
 <span class="nc" id="L55">            int key = hashTableSiaod.possibleKeys.get(rndIndex);</span>
 <span class="nc" id="L56">            int val = RandomSiaod.nextInt() % 1000 + 1000;</span>
@@ -68,9 +68,9 @@ import org.openjdk.jol.info.ClassLayout;
 
     public static void profilePerfectHash() throws TooBigNumberException, CollisionException {
 <span class="nc" id="L70">        Profiler profiler = new Profiler();</span>
-<span class="nc" id="L71">        int keysCountInit = 10_000;</span>
-<span class="nc" id="L72">        int maxKeyInit = 10_000;</span>
-<span class="nc" id="L73">        int iterations = 30;</span>
+<span class="nc" id="L71">        int keysCountInit = 200_000;</span>
+<span class="nc" id="L72">        int maxKeyInit = 600_000;</span>
+<span class="nc" id="L73">        int iterations = 10;</span>
 <span class="nc" id="L74">        int steps = 30;</span>
 
 <span class="nc" id="L76">        ArrayList&lt;ProfilingReport&gt; avgReps = new ArrayList&lt;&gt;();</span>

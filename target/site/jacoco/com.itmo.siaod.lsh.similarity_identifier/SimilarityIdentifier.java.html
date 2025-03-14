@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimilarityIdentifier.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">lab1</a> &gt; <a href="index.source.html" class="el_package">com.itmo.siaod.lsh.similarity_identifier</a> &gt; <span class="el_source">SimilarityIdentifier.java</span></div><h1>SimilarityIdentifier.java</h1><pre class="source lang-java linenums">package com.itmo.siaod.lsh.similarity_identifier;
+
+import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
+import com.itmo.siaod.lsh.hash_tables.HashTableSiaod;
+import com.itmo.siaod.lsh.hash_tables.IHashTableSiaod;
+import com.itmo.siaod.lsh.hash_tables.bands.IBand;
+import com.itmo.siaod.lsh.hash_tables.bands.IBandToHashKeyMapper;
+import com.itmo.siaod.lsh.hash_tables.bands.IBander;
+import com.itmo.siaod.lsh.model.Point;
+import com.itmo.siaod.lsh.lsh.LSH;
+import com.itmo.siaod.lsh.model.PointCenterer;
+import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SimilarityIdentifier implements ISimilarityIdentifier {
+
+    private List&lt;List&lt;Integer&gt;&gt; preliminarySimilarSignaturesIndices;
+    private List&lt;List&lt;Boolean&gt;&gt; signatures;
+    private LSH lsh;
+    private List&lt;Point&gt; centeredPoints;
+    private PointCenterer pointCenterer;
+
+<span class="fc" id="L25">    public SimilarityIdentifier(List&lt;Point&gt; points, List&lt;Double&gt; timings) {</span>
+<span class="fc" id="L26">        this.pointCenterer = new PointCenterer(points);</span>
+<span class="fc" id="L27">        this.centeredPoints = this.pointCenterer.getCenteredPoints();</span>
+<span class="fc" id="L28">        List&lt;Point&gt; centeredPoints = this.pointCenterer.getCenteredPoints();</span>
+<span class="fc" id="L29">        this.lsh = new LSH(centeredPoints);</span>
+<span class="fc" id="L30">        this.signatures = this.lsh.getSignatures();</span>
+<span class="fc" id="L31">        this.preliminarySimilarSignaturesIndices = calculatePreliminarySimilarIndices(timings);</span>
+<span class="fc" id="L32">    }</span>
+
+    protected List&lt;List&lt;Integer&gt;&gt; calculatePreliminarySimilarIndices(List&lt;Double&gt; timings) {
+<span class="fc" id="L35">        IHashTableSiaod hashTable = distributeSignatures(signatures, timings);</span>
+<span class="fc" id="L36">        return hashTable.getAllEntries().stream()</span>
+<span class="fc" id="L37">                .map(listOfEntries -&gt; listOfEntries.stream()</span>
+<span class="fc" id="L38">                        .map(IEntry::getValue)</span>
+<span class="fc" id="L39">                        .toList()</span>
+<span class="fc" id="L40">                ).toList();</span>
+    }
+
+    @Override
+    public List&lt;List&lt;Integer&gt;&gt; getPreliminarySimilarSetsIndices() {
+<span class="fc" id="L45">        return this.preliminarySimilarSignaturesIndices;</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L50">        StringBuilder res = new StringBuilder();</span>
+<span class="fc bfc" id="L51" title="All 2 branches covered.">        for (List&lt;Integer&gt; curSimilarIndices : preliminarySimilarSignaturesIndices) {</span>
+<span class="fc bfc" id="L52" title="All 2 branches covered.">            if (curSimilarIndices.size() &lt; 2) continue;</span>
+<span class="fc" id="L53">            ArrayList&lt;String&gt; rowArr = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L54" title="All 2 branches covered.">            for (Integer index : curSimilarIndices){</span>
+<span class="fc" id="L55">                rowArr.add(this.pointCenterer.uncenterPoint(this.centeredPoints.get(index)).toString());</span>
+<span class="fc" id="L56">            }</span>
+<span class="fc" id="L57">            res.append(String.join(&quot;, &quot;, rowArr)).append(&quot;\n&quot;);</span>
+<span class="fc" id="L58">        }</span>
+<span class="fc" id="L59">        String s = res.toString();</span>
+<span class="pc bpc" id="L60" title="1 of 2 branches missed.">        return s.isEmpty() ? &quot;No similarities found&quot; : s;</span>
+    }
+
+    protected static IHashTableSiaod distributeSignatures(List&lt;List&lt;Boolean&gt;&gt; signatures, List&lt;Double&gt; timings) {
+<span class="fc" id="L64">        Double start = (double) System.currentTimeMillis();</span>
+<span class="fc" id="L65">        List&lt;IBand&gt; bands = IBander.splitIntoBands(signatures);</span>
+<span class="fc" id="L66">        Double splitBandsEnd = (double) System.currentTimeMillis();</span>
+<span class="fc" id="L67">        List&lt;List&lt;Integer&gt;&gt; bandsHashKeys = IBandToHashKeyMapper.mapBandsToHashKeys(bands);</span>
+<span class="fc" id="L68">        Double mapHashKeysEnd = (double) System.currentTimeMillis();</span>
+<span class="fc" id="L69">        IHashTableSiaod hashTable = new HashTableSiaod(10 * bands.size() * signatures.size());</span>
+<span class="fc" id="L70">        Double hashTableInitEnd = (double) System.currentTimeMillis();</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        for (int i = 0; i &lt; bandsHashKeys.size(); i++){</span>
+<span class="fc" id="L72">            List&lt;Integer&gt; curBandHashKeys = bandsHashKeys.get(i);</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">            for (int signatureIndex = 0; signatureIndex &lt; signatures.size(); signatureIndex++) {</span>
+                try {
+<span class="fc" id="L75">                    hashTable.put(curBandHashKeys.get(signatureIndex), signatureIndex);</span>
+<span class="nc" id="L76">                } catch (TooBigNumberException e) {</span>
+<span class="nc" id="L77">                    throw new RuntimeException();</span>
+<span class="fc" id="L78">                }</span>
+            }
+        }
+<span class="fc" id="L81">        Double distributeEnd = (double) System.currentTimeMillis();</span>
+<span class="fc" id="L82">        double splitBands = splitBandsEnd - start;</span>
+<span class="fc" id="L83">        double mapHashKeys = mapHashKeysEnd - splitBandsEnd;</span>
+<span class="fc" id="L84">        double hashTableInit = hashTableInitEnd - mapHashKeysEnd;</span>
+<span class="fc" id="L85">        double distribute = distributeEnd - hashTableInitEnd;</span>
+<span class="fc" id="L86">        timings.addAll(List.of(splitBands, mapHashKeys, hashTableInit, distribute));</span>
+<span class="fc" id="L87">        return hashTable;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>
