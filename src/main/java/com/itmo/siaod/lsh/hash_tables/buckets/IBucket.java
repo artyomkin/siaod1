@@ -1,12 +1,12 @@
 package com.itmo.siaod.lsh.hash_tables.buckets;
 
-import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
+import org.eclipse.collections.api.list.primitive.MutableIntList;
 
 import java.util.List;
 
 public interface IBucket {
-    boolean put(Integer key, Integer val);
-    boolean delete(Integer key);
-    Integer get(Integer key);
-    List<IEntry> getAll();
+    boolean put(int key, int val);
+    boolean delete(int key);
+    int get(int key);
+    //List<MutableIntList> getAll();
 }

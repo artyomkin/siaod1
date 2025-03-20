@@ -1,34 +1,34 @@
 package com.itmo.siaod.lsh.hash_tables.buckets;
 
-import com.itmo.siaod.extendible_hash.buckets.entries.Entry;
-import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
+import org.eclipse.collections.api.list.primitive.MutableIntList;
+import org.eclipse.collections.impl.factory.primitive.IntLists;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SetBucket implements IBucket {
 
-    private List<IEntry> entries;
+    private MutableIntList keys;
+    private MutableIntList values;
 
     public SetBucket() {
-        this.entries = new ArrayList<>();
+        this.keys = IntLists.mutable.empty();
+        this.values = IntLists.mutable.empty();
     }
 
     @Override
-    public boolean put(Integer key, Integer val) {
-        //boolean entriesContainKeyVal = this.entries.stream()
-        //        .anyMatch(entry -> entry.getKey().equals(key) && entry.getValue().equals(val));
-        //if (entriesContainKeyVal) return false;
-
-        this.entries.add(new Entry(key, val));
+    public boolean put(int key, int val) {
+        this.keys.add(key);
+        this.values.add(val);
         return true;
     }
 
     @Override
-    public boolean delete(Integer key) {
-        for (int i = 0; i < entries.size(); i++){
-            if (this.entries.get(i).getKey().equals(key)){
-                this.entries.remove(i);
+    public boolean delete(int key) {
+        for (int i = 0; i < keys.size(); i++){
+            if (this.keys.get(i) == key){
+                this.keys.removeAtIndex(i);
+                this.values.removeAtIndex(i);
                 return true;
             }
         }
@@ -36,17 +36,21 @@ public class SetBucket implements IBucket {
     }
 
     @Override
-    public Integer get(Integer key) {
-        for (int i = 0; i < entries.size(); i++){
-            if (this.entries.get(i).getKey().equals(key)){
-                return this.entries.get(i).getValue();
+    public int get(int key) {
+        for (int i = 0; i < this.keys.size(); i++){
+            if (this.keys.get(i) == key){
+                return this.values.get(i);
             }
         }
-        return null;
+        return Integer.MIN_VALUE;
     }
 
-    @Override
-    public List<IEntry> getAll() {
-        return this.entries;
+    public MutableIntList getVals(){
+        return this.values;
     }
+
+    //@Override
+    //public List<MutableIntList> getAll() {
+    //    return List.of(keys, values);
+    //}
 }

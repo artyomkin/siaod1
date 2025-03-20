@@ -2,8 +2,6 @@ package com.itmo.siaod.profiler;
 
 import com.itmo.siaod.lsh.lsh.LSH;
 import com.itmo.siaod.lsh.model.Point;
-import com.itmo.siaod.lsh.similarity_identifier.ISimilarityIdentifier;
-import com.itmo.siaod.lsh.similarity_identifier.SimilarityIdentifier;
 import com.itmo.siaod.perfect_hash.exceptions.CollisionException;
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
 import com.itmo.siaod.perfect_hash.hash_tables.HashTableSiaod;
@@ -14,6 +12,10 @@ import java.lang.management.OperatingSystemMXBean;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.collections.api.list.primitive.MutableDoubleList;
+import org.eclipse.collections.api.list.primitive.MutableIntList;
+import org.eclipse.collections.impl.factory.primitive.DoubleLists;
+import org.eclipse.collections.impl.factory.primitive.IntLists;
 import org.openjdk.jol.info.ClassLayout;
 
 
@@ -25,19 +27,19 @@ public class Profiler {
         return ClassLayout.parseInstance(o).instanceSize();
     }
 
-    public HashTableSiaod createHashTableSiaod(Integer keysCount, Integer maxKey) throws TooBigNumberException {
+    public HashTableSiaod createHashTableSiaod(int keysCount, int maxKey) throws TooBigNumberException {
 
-        ArrayList<Integer> possibleKeys = new ArrayList<>();
+        MutableIntList possibleKeys = IntLists.mutable.empty();
         int possibleKeysSize = RandomSiaod.nextInt() % keysCount + 1;
         for (int i = 0; i < possibleKeysSize; i++) {
             possibleKeys.add(RandomSiaod.nextInt() % maxKey);
         }
-        List<Integer> uniqPossibleKeys = possibleKeys.stream().distinct().toList();
+        MutableIntList uniqPossibleKeys = possibleKeys.distinct();
         return new HashTableSiaod(uniqPossibleKeys);
 
     }
 
-    public ProfilingReport profileHashTableSiaodBuild(Integer keysCount, Integer maxKey) throws TooBigNumberException {
+    public ProfilingReport profileHashTableSiaodBuild(int keysCount, int maxKey) throws TooBigNumberException {
         long timeStart = System.currentTimeMillis();
         HashTableSiaod hashTableSiaod = createHashTableSiaod(keysCount, maxKey);
         long timeEnd = System.currentTimeMillis();
@@ -50,7 +52,7 @@ public class Profiler {
         return rep;
     }
 
-    public ProfilingReport profileHashTableSiaodOperations(Integer keysCount, Integer maxKey) throws TooBigNumberException, CollisionException {
+    public ProfilingReport profileHashTableSiaodOperations(int keysCount, int maxKey) throws TooBigNumberException, CollisionException {
         HashTableSiaod hashTableSiaod = createHashTableSiaod(keysCount, maxKey);
 
         long timeStart = System.currentTimeMillis();
@@ -93,7 +95,7 @@ public class Profiler {
         ProfilingReport.print(avgReps);
     }
 
-    public ProfilingReport profileExtendibleHashTableSiaodOperations(Integer keysCount)  {
+    public ProfilingReport profileExtendibleHashTableSiaodOperations(int keysCount)  {
         com.itmo.siaod.extendible_hash.IHashTableSiaod hashTableSiaod = new com.itmo.siaod.extendible_hash.hash_tables.HashTableSiaod();
 
         long timeStart = System.currentTimeMillis();
@@ -106,7 +108,7 @@ public class Profiler {
         long timeEnd = System.currentTimeMillis();
         ProfilingReport rep = new ProfilingReport();
         rep.elapsedTimeSeconds = (timeEnd - timeStart) / 1000d;
-        rep.memoryUsedMB = getMemoryUsage(hashTableSiaod.getAllEntries().toArray()) / Math.pow(2, 20);
+        //rep.memoryUsedMB = getMemoryUsage(hashTableSiaod.getAllEntries().toArray()) / Math.pow(2, 20);
         rep.keysCount = keysCount;
         return rep;
 
@@ -132,17 +134,18 @@ public class Profiler {
         ProfilingReport.print(avgReps);
     }
 
-    public ProfilingReport profileLSHSearch(Integer pointsCount)  {
+    public ProfilingReport profileLSHSearch(int pointsCount)  {
         List<Point> points = Point.generateRandomPoints(pointsCount, 100_000_000);
-        List<Double> timings = new ArrayList<>();
+        MutableDoubleList timings = DoubleLists.mutable.empty();
         long timeStart = System.currentTimeMillis();
         LSH lsh = new LSH(points);
-        ISimilarityIdentifier similarityIdentifier = new SimilarityIdentifier(points, timings);
+        //ISimilarityIdentifier similarityIdentifier = new SimilarityIdentifier(points, timings);
         long timeEnd = System.currentTimeMillis();
 
         ProfilingReport rep = new ProfilingReport();
         rep.elapsedTimeSeconds = (timeEnd - timeStart) / 1000d;
-        rep.memoryUsedMB = getMemoryUsage(similarityIdentifier.getPreliminarySimilarSetsIndices().toArray()) / Math.pow(2, 20);
+        //TODO
+        //rep.memoryUsedMB = getMemoryUsage(similarityIdentifier.getPreliminarySimilarSetsIndices().toArray()) / Math.pow(2, 20);
         rep.keysCount = pointsCount;
         return rep;
 

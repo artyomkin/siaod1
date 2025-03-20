@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface IBander {
 
-    Integer BAND_SIZE = 30;
-    Integer BAND_NUMBER = 100;
+    int BAND_SIZE = 30;
+    int BAND_NUMBER = 100;
 
     static List<IBand> splitIntoBands(List<List<Boolean>> signatures) {
         if (signatures == null){

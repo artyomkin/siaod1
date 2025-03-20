@@ -3,10 +3,10 @@ package com.itmo.siaod.profiler;
 import java.util.ArrayList;
 
 public class ProfilingReport {
-    public Double memoryUsedMB;
-    public Double elapsedTimeSeconds;
-    public Integer keysCount;
-    public Integer maxKey;
+    public double memoryUsedMB;
+    public double elapsedTimeSeconds;
+    public int keysCount;
+    public int maxKey;
 
     public static void print(ArrayList<ProfilingReport> reps) {
         System.out.format(
@@ -33,7 +33,6 @@ public class ProfilingReport {
         rep.memoryUsedMB = reps.stream().mapToDouble(report -> report.memoryUsedMB).average().getAsDouble();
         rep.elapsedTimeSeconds = reps.stream().mapToDouble(report -> report.elapsedTimeSeconds).average().getAsDouble();
         rep.keysCount = (int) reps.stream().mapToInt(report -> report.keysCount).average().getAsDouble();
-        rep.maxKey = (int) reps.stream().mapToInt(report -> report.maxKey != null ? report.maxKey : 0).average().getAsDouble();
         return rep;
     }
 }

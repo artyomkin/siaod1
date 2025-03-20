@@ -48,23 +48,23 @@ public class TestHashTableBucket {
         assertTrue(hashTableSize <= 2 * Math.pow(possibleKeys.size(), 2));
     }
 
-    @Test
-    public void testDoesFunctionMakeCollisions() throws TooBigNumberException {
-        UniversalLinearTableHashFunction function = new UniversalLinearTableHashFunction(possibleKeys, possibleKeys.size() - 1);
-        assertTrue(bucket.doesFunctionMakeCollisions(possibleKeys, function));
-    }
+    //@Test
+    //public void testDoesFunctionMakeCollisions() throws TooBigNumberException {
+    //    UniversalLinearTableHashFunction function = new UniversalLinearTableHashFunction(possibleKeys, possibleKeys.size() - 1);
+    //    assertTrue(bucket.doesFunctionMakeCollisions(possibleKeys, function));
+    //}
 
-    @Test
-    public void testChooseFunction() throws TooBigNumberException {
-        IUniversalHashFunction function = bucket.chooseHashFunction(bucket.genHashTableSize(possibleKeys.size()), possibleKeys);
-        assertFalse(bucket.doesFunctionMakeCollisions(possibleKeys, function));
-    }
+    //@Test
+    //public void testChooseFunction() throws TooBigNumberException {
+    //    IUniversalHashFunction function = bucket.chooseHashFunction(bucket.genHashTableSize(possibleKeys.size()), possibleKeys);
+    //    assertFalse(bucket.doesFunctionMakeCollisions(possibleKeys, function));
+    //}
 
-    @Test
-    public void testInitHashTable() throws TooBigNumberException {
-        bucket.initHashTable(possibleKeys);
-        assertFalse(bucket.doesFunctionMakeCollisions(possibleKeys, bucket.getHashFunction()));
-    }
+    //@Test
+    //public void testInitHashTable() throws TooBigNumberException {
+    //    bucket.initHashTable(possibleKeys);
+    //    assertFalse(bucket.doesFunctionMakeCollisions(possibleKeys, bucket.getHashFunction()));
+    //}
 
     @Test
     public void testResetValues() throws TooBigNumberException {

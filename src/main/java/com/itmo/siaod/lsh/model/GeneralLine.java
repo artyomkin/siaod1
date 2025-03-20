@@ -9,7 +9,7 @@ public class GeneralLine implements ILine {
     public double B;
     public double C;
 
-    public GeneralLine(Double distance) {
+    public GeneralLine(double distance) {
         do {
             Point p1 = new Point(distance);
             Point p2 = new Point(distance);

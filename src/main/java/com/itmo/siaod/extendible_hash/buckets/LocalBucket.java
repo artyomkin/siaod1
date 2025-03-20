@@ -1,35 +1,40 @@
 package com.itmo.siaod.extendible_hash.buckets;
 
-import com.itmo.siaod.extendible_hash.buckets.entries.Entry;
-import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
+import org.eclipse.collections.api.list.primitive.MutableIntList;
+import org.eclipse.collections.impl.factory.primitive.IntLists;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LocalBucket implements ILocalBucket {
 
-    public static final Integer CAPACITY = 10;
-    private ArrayList<IEntry> entries;
-    private Short depth;
+    public static final int CAPACITY = 10;
+    private MutableIntList keys;
+    private MutableIntList values;
+    private short depth;
 
-    public LocalBucket(Short depth){
-        this.entries = new ArrayList<>(CAPACITY);
+    public LocalBucket(short depth){
+        this.keys = IntLists.mutable.empty();
+        this.values = IntLists.mutable.empty();
         this.depth = depth;
     }
 
     @Override
-    public boolean put(Integer key, Integer value) {
-        if (this.entries.size() >= CAPACITY) {
+    public boolean put(int key, int value) {
+        if (this.keys.size() >= CAPACITY) {
             return false;
         }
-        this.entries.add(new Entry(key, value));
+        this.keys.add(key);
+        this.values.add(value);
         return true;
     }
 
     @Override
-    public boolean delete(Integer key) {
-        for (int i = 0; i < this.entries.size(); i++){
-            if (this.entries.get(i).getKey().equals(key)){
-                this.entries.remove(i);
+    public boolean delete(int key) {
+        for (int i = 0; i < this.keys.size(); i++){
+            if (this.keys.get(i) == key){
+                this.keys.removeAtIndex(i);
+                this.values.removeAtIndex(i);
                 return true;
             }
         }
@@ -37,22 +42,22 @@ public class LocalBucket implements ILocalBucket {
     }
 
     @Override
-    public Integer get(Integer key) {
-        for (IEntry entry : this.entries){
-            if (entry.getKey().equals(key)){
-                return entry.getValue();
+    public int get(int key) {
+        for (int i = 0; i < this.keys.size(); i++) {
+            if (keys.get(i) == key){
+                return this.values.get(i);
             }
         }
-        return null;
+        return Integer.MIN_VALUE;
     }
 
     @Override
-    public Short depth() {
+    public short depth() {
         return this.depth;
     }
 
     @Override
-    public ArrayList<IEntry> getAll() {
-        return this.entries;
+    public List<MutableIntList> getAll() {
+        return List.of(this.keys, this.values);
     }
 }

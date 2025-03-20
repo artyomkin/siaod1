@@ -1,16 +1,18 @@
 package com.itmo.siaod.lsh.hash_functions;
 
+import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
+
 public class UniversalLinearLimitedHashFunction extends UniversalLinearHashFunction{
 
-    private Integer limit;
+    private int limit;
 
-    public UniversalLinearLimitedHashFunction(Integer limit){
+    public UniversalLinearLimitedHashFunction(int limit){
         super();
         this.limit = limit;
     }
 
     @Override
-    public Long hash(Integer key) {
+    public long hash(int key) {
         return super.hash(key) % limit;
     }
 

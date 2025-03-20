@@ -2,35 +2,37 @@ package com.itmo.siaod.perfect_hash.hash_tables.buckets;
 
 import com.itmo.siaod.perfect_hash.exceptions.CollisionException;
 import com.itmo.siaod.perfect_hash.hash_tables.ISimpleBucket;
+import org.eclipse.collections.api.list.primitive.MutableIntList;
+import org.eclipse.collections.impl.factory.primitive.IntLists;
 
 import java.util.ArrayList;
 
 public class SimpleBucket implements ISimpleBucket {
 
-    private ArrayList<Integer> values;
+    private MutableIntList values;
 
     public SimpleBucket() {
-        this.values = new ArrayList<>();
+        this.values = IntLists.mutable.empty();
     }
 
-    public SimpleBucket(Integer initialKey){
-        this.values = new ArrayList<>();
+    public SimpleBucket(int initialKey){
+        this.values = IntLists.mutable.empty();
         this.values.add(initialKey);
     }
 
     @Override
-    public ArrayList<Integer> getVals() {
+    public MutableIntList getVals() {
         return this.values;
     }
 
     @Override
-    public boolean putKey(Integer key, Integer val) {
+    public boolean putKey(int key, int val) {
         this.values.add(val);
         return true;
     }
 
     @Override
-    public boolean put(Integer key, Integer val) {
+    public boolean put(int key, int val) {
         if (this.values.isEmpty()) {
             this.values.add(val);
         } else {
@@ -40,8 +42,7 @@ public class SimpleBucket implements ISimpleBucket {
     }
 
     @Override
-    public Integer get(Integer key) throws CollisionException {
-        if (this.values.isEmpty()) return null;
+    public int get(int key) throws CollisionException {
         if (this.values.size() > 1) {
             throw new CollisionException("The bucket has collisions.");
         }
@@ -54,7 +55,7 @@ public class SimpleBucket implements ISimpleBucket {
     }
 
     @Override
-    public boolean delete(Integer key) {
+    public boolean delete(int key) {
         if (this.values.isEmpty()) return false;
         this.values.clear();
         return true;

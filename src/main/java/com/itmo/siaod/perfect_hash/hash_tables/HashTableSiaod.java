@@ -7,6 +7,7 @@ import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearTableHashFuncti
 import com.itmo.siaod.perfect_hash.hash_tables.buckets.HashTableBucket;
 import com.itmo.siaod.perfect_hash.hash_tables.buckets.SimpleBucket;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
+import org.eclipse.collections.api.list.primitive.MutableIntList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +15,15 @@ import java.util.List;
 public class HashTableSiaod implements IHashTableSiaod {
 
     private IUniversalHashFunction hashFunction;
-    private Integer hashTableSize;
+    private int hashTableSize;
     public ArrayList<IBucket> buckets;
-    public List<Integer> possibleKeys;
+    public MutableIntList possibleKeys;
 
-    public HashTableSiaod(List<Integer> allPossibleKeys) throws TooBigNumberException {
+    public HashTableSiaod(MutableIntList allPossibleKeys) throws TooBigNumberException {
         if (allPossibleKeys.isEmpty())
             throw new RuntimeException("No possible keys passed");
 
-        List<Integer> allUniqPossibleKeys = allPossibleKeys.stream().distinct().toList();
+        MutableIntList allUniqPossibleKeys = allPossibleKeys.distinct();
         int allUniqPossibleKeysCount = allUniqPossibleKeys.size();
         this.possibleKeys = allUniqPossibleKeys;
 
@@ -34,20 +35,18 @@ public class HashTableSiaod implements IHashTableSiaod {
         resetBuckets();
     }
 
-    protected void initializeFirstLayer(List<Integer> allPossibleKeys) throws TooBigNumberException {
+    protected void initializeFirstLayer(MutableIntList allPossibleKeys) throws TooBigNumberException {
         this.buckets = new ArrayList<>(this.hashTableSize);
         for (int i = 0; i < this.hashTableSize; i++){
             this.buckets.add(null);
         }
-        for (Integer key : allPossibleKeys) {
-            addKey(key);
+        for (int i = 0; i < allPossibleKeys.size(); i++) {
+            addKey(allPossibleKeys.get(i));
         }
     }
 
-    protected void addKey(Integer key) throws TooBigNumberException {
-        if (key == null) return;
-
-        Integer index = Math.toIntExact(this.hashFunction.hash(key));
+    protected void addKey(int key) throws TooBigNumberException {
+        int index = Math.toIntExact(this.hashFunction.hash(key));
         if (this.buckets.get(index) == null) {
             IBucket simpleBucket = new SimpleBucket(key);
             this.buckets.set(index, simpleBucket);
@@ -77,33 +76,33 @@ public class HashTableSiaod implements IHashTableSiaod {
     }
 
     @Override
-    public boolean put(Integer key, Integer val) throws TooBigNumberException {
-        Integer index = Math.toIntExact(this.hashFunction.hash(key));
+    public boolean put(int key, int val) throws TooBigNumberException {
+        int index = Math.toIntExact(this.hashFunction.hash(key));
         return this.buckets.get(index).put(key, val);
     }
 
     @Override
-    public Integer get(Integer key) throws CollisionException, TooBigNumberException {
-        Integer index = Math.toIntExact(this.hashFunction.hash(key));
+    public int get(int key) throws CollisionException, TooBigNumberException {
+        int index = Math.toIntExact(this.hashFunction.hash(key));
         return this.buckets.get(index).get(key);
     }
 
     @Override
-    public boolean delete(Integer key) throws TooBigNumberException {
-        Integer index = Math.toIntExact(this.hashFunction.hash(key));
+    public boolean delete(int key) throws TooBigNumberException {
+        int index = Math.toIntExact(this.hashFunction.hash(key));
         return this.buckets.get(index).delete(key);
     }
 
     @Override
     public String toString(){
-        String res = "";
+        StringBuilder res = new StringBuilder();
         for (int i = 0; i < this.buckets.size(); i++) {
             if (this.buckets.get(i) == null) {
-                res = res + " " + i + ": null" + "\n ";
+                res.append(" ").append(i).append(": null").append("\n ");
             } else {
-                res = res + " " + (this.buckets.get(i).isSimple() ? "simple" : "hashTable") + " " + i + ": " + this.buckets.get(i).toString() + "\n ";
+                res.append(" ").append(this.buckets.get(i).isSimple() ? "simple" : "hashTable").append(" ").append(i).append(": ").append(this.buckets.get(i).toString()).append("\n ");
             }
         }
-        return res;
+        return res.toString();
     }
 }

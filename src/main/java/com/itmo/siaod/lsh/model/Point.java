@@ -34,11 +34,11 @@ public class Point {
         return points;
     }
 
-    private Double generateRandomY(double minY, double maxY){
+    private double generateRandomY(double minY, double maxY){
         return minY + (maxY - minY) * rnd.nextDouble();
     }
 
-    private Double generateRandomX(double minX, double maxX){
+    private double generateRandomX(double minX, double maxX){
         return minX + (maxX - minX) * rnd.nextDouble();
     }
 

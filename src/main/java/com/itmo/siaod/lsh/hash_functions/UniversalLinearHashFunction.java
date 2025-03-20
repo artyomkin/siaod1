@@ -5,12 +5,12 @@ import com.itmo.siaod.perfect_hash.prime_numbers.IPrimeGenerator;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
 
 public class UniversalLinearHashFunction implements IUniversalHashFunction {
-    private Long a;
-    private Long b;
-    private Long p;
+    private long a;
+    private long b;
+    private long p;
 
     public UniversalLinearHashFunction() {
-        p = IPrimeGenerator.findNextPrime((long) (RandomSiaod.nextInt() % 1_000 + 1_000_000));
+        p = IPrimeGenerator.findNextPrime(RandomSiaod.nextInt() % 1_000 + 1_000_000);
         b = RandomSiaod.nextInt() % p;
         a = RandomSiaod.nextInt() % p;
         if (a == 0){
@@ -19,7 +19,7 @@ public class UniversalLinearHashFunction implements IUniversalHashFunction {
     }
 
     @Override
-    public Long hash(Integer key) {
+    public long hash(int key) {
         return (a * key + b) % p;
     }
 

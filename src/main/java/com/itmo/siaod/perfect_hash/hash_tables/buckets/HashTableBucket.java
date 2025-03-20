@@ -6,12 +6,14 @@ import com.itmo.siaod.perfect_hash.hash_functions.UniversalLinearTableHashFuncti
 import com.itmo.siaod.perfect_hash.hash_tables.IBucket;
 import com.itmo.siaod.perfect_hash.hash_tables.IUniversalHashFunction;
 import com.itmo.siaod.perfect_hash.utils.RandomSiaod;
+import org.eclipse.collections.api.list.primitive.MutableIntList;
+import org.eclipse.collections.impl.factory.primitive.IntLists;
 
 import java.util.ArrayList;
 
 public class HashTableBucket implements IBucket {
 
-    private ArrayList<Integer> hashTable;
+    private MutableIntList hashTable;
     private IUniversalHashFunction universalHashFunction;
 
     public HashTableBucket(ISimpleBucket simpleBucket) throws TooBigNumberException {
@@ -19,12 +21,12 @@ public class HashTableBucket implements IBucket {
     }
 
     @Override
-    public boolean putKey(Integer key, Integer val) throws TooBigNumberException {
+    public boolean putKey(int key, int val) throws TooBigNumberException {
         return put(key, val);
     }
 
     @Override
-    public boolean put(Integer key, Integer val) throws TooBigNumberException {
+    public boolean put(int key, int val) throws TooBigNumberException {
         if (this.hashTable == null || this.hashTable.size() <= 1 || this.universalHashFunction == null) return false;
 
         int index = Math.toIntExact(this.universalHashFunction.hash(key));
@@ -33,9 +35,7 @@ public class HashTableBucket implements IBucket {
     }
 
     @Override
-    public Integer get(Integer key) throws TooBigNumberException {
-        if (this.hashTable == null || this.hashTable.size() <= 1 || this.universalHashFunction == null) return null;
-
+    public int get(int key) throws TooBigNumberException {
         int index = Math.toIntExact(this.universalHashFunction.hash(key));
         return this.hashTable.get(index);
     }
@@ -46,17 +46,19 @@ public class HashTableBucket implements IBucket {
     }
 
     @Override
-    public boolean delete(Integer key) throws TooBigNumberException {
+    public boolean delete(int key) throws TooBigNumberException {
         if (this.hashTable == null || this.hashTable.size() <= 1 || this.universalHashFunction == null) return false;
 
         int index = Math.toIntExact(this.universalHashFunction.hash(key));
-        this.hashTable.set(index, null);
+        this.hashTable.set(index, Integer.MIN_VALUE);
         return true;
     }
 
     @Override
     public void resetValues() {
-        this.hashTable.replaceAll(ignored -> null);
+        for (int i = 0; i < this.hashTable.size(); i++){
+            this.hashTable.set(i, Integer.MIN_VALUE);
+        }
     }
 
     @Override
@@ -69,23 +71,23 @@ public class HashTableBucket implements IBucket {
         return this.hashTable.toString();
     }
 
-    protected int genHashTableSize(Integer keysCount) {
+    protected int genHashTableSize(int keysCount) {
         double antiCollisionFactor = (12d + (RandomSiaod.nextInt() % 9d)) / 10d;
         return (int) (antiCollisionFactor * Math.pow(keysCount, 2));
     }
 
-    public void initHashTable(ArrayList<Integer> keysArr) throws TooBigNumberException {
+    public void initHashTable(MutableIntList keysArr) throws TooBigNumberException {
         if (keysArr == null || keysArr.size() <= 1) return;
 
         int hashTableSize = genHashTableSize(keysArr.size());
         this.universalHashFunction = chooseHashFunction(hashTableSize, keysArr);
-        this.hashTable = new ArrayList<>(hashTableSize);
+        this.hashTable = IntLists.mutable.empty();
         for (int i = 0; i < hashTableSize; i++){
-            this.hashTable.add(null);
+            this.hashTable.add(Integer.MIN_VALUE);
         }
     }
 
-    protected IUniversalHashFunction chooseHashFunction(Integer hashTableSize, ArrayList<Integer> keysArr) throws TooBigNumberException {
+    protected IUniversalHashFunction chooseHashFunction(int hashTableSize, MutableIntList keysArr) throws TooBigNumberException {
         final int MAX_ATTEMPTS = 100;
         int attempts = 0;
         IUniversalHashFunction function = null;
@@ -99,15 +101,15 @@ public class HashTableBucket implements IBucket {
         return function;
     }
 
-    protected UniversalLinearTableHashFunction shuffleFunction(ArrayList<Integer> keysArr, int hashTableSize) throws TooBigNumberException {
+    protected UniversalLinearTableHashFunction shuffleFunction(MutableIntList keysArr, int hashTableSize) throws TooBigNumberException {
         return new UniversalLinearTableHashFunction(keysArr, hashTableSize);
     }
 
-    protected boolean doesFunctionMakeCollisions(ArrayList<Integer> keysArr, IUniversalHashFunction function) throws TooBigNumberException {
+    protected boolean doesFunctionMakeCollisions(MutableIntList keysArr, IUniversalHashFunction function) throws TooBigNumberException {
         if (keysArr == null || function == null) return true;
-        ArrayList<Integer> hashes = new ArrayList<>();
-        for (Integer key : keysArr) {
-            Integer hash = Math.toIntExact(function.hash(key));
+        MutableIntList hashes = IntLists.mutable.empty();
+        for (int i = 0; i < keysArr.size(); i++) {
+            int hash = Math.toIntExact(function.hash(keysArr.get(i)));
             // collision
             if (hashes.contains(hash)) return true;
 
@@ -120,7 +122,7 @@ public class HashTableBucket implements IBucket {
         return this.universalHashFunction;
     }
 
-    public ArrayList<Integer> getHashTable(){
+    public MutableIntList getHashTable(){
         return this.hashTable;
     }
 

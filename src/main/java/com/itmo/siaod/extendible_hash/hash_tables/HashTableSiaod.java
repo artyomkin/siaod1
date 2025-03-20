@@ -3,7 +3,6 @@ package com.itmo.siaod.extendible_hash.hash_tables;
 import com.itmo.siaod.extendible_hash.IHashTableSiaod;
 import com.itmo.siaod.extendible_hash.buckets.GlobalBucket;
 import com.itmo.siaod.extendible_hash.buckets.ILocalBucket;
-import com.itmo.siaod.extendible_hash.buckets.entries.IEntry;
 
 import java.util.List;
 
@@ -16,22 +15,22 @@ public class HashTableSiaod implements IHashTableSiaod {
     }
 
     @Override
-    public boolean put(Integer key, Integer value) {
+    public boolean put(int key, int value) {
         return this.globalBucket.put(key, value);
     }
 
     @Override
-    public Integer get(Integer key) {
+    public int get(int key) {
         return this.globalBucket.get(key);
     }
 
     @Override
-    public boolean delete(Integer key) {
+    public boolean delete(int key) {
         return this.globalBucket.delete(key);
     }
 
-    @Override
-    public List<List<IEntry>> getAllEntries() {
-        return this.globalBucket.getEntries();
-    }
+    //@Override
+    //public List<List<IEntry>> getAllEntries() {
+    //    return this.globalBucket.getEntries();
+    //}
 }

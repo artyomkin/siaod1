@@ -1,11 +1,12 @@
 import com.itmo.siaod.lsh.lsh.LSH;
 import com.itmo.siaod.lsh.model.Point;
-import com.itmo.siaod.lsh.similarity_identifier.ISimilarityIdentifier;
-import com.itmo.siaod.lsh.similarity_identifier.SimilarityIdentifier;
 import com.itmo.siaod.perfect_hash.exceptions.CollisionException;
 import com.itmo.siaod.perfect_hash.exceptions.TooBigNumberException;
 import com.itmo.siaod.perfect_hash.hash_tables.HashTableSiaod;
-import com.itmo.siaod.profiler.Profiler;
+import org.eclipse.collections.api.list.primitive.MutableDoubleList;
+import org.eclipse.collections.api.list.primitive.MutableIntList;
+import org.eclipse.collections.impl.factory.primitive.DoubleLists;
+import org.eclipse.collections.impl.factory.primitive.IntLists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,14 +30,14 @@ public class Main {
         //reports.add(r5);
         //ProfilingReport.print(reports);
 
-        //List<List<List<Double>>> allTimings = new ArrayList<>();
+        //List<List<List<double>>> allTimings = new ArrayList<>();
         //int init = 200_000;
         //int iterations = 1;
-        //for (Integer i = 0; i < 1; i++){
-        //    List<List<Double>> iTimings = new ArrayList<>();
+        //for (int i = 0; i < 1; i++){
+        //    List<List<double>> iTimings = new ArrayList<>();
         //    for (int iter = 0; iter < iterations; iter++){
         //        List<Point> points = Point.generateRandomPoints(init * (i + 1), 100_000_000);
-        //        List<Double> timings = new ArrayList<>();
+        //        List<double> timings = new ArrayList<>();
         //        ISimilarityIdentifier similarityIdentifier = new SimilarityIdentifier(points, timings);
         //        iTimings.add(timings);
         //    }
@@ -47,24 +48,28 @@ public class Main {
         //    System.out.println(avgs(allTimings.get(i)));
         //}
 
-        //List<Point> points = Point.generateRandomPoints(1_00_000, 10_000_000);
+        List<Point> points = Point.generateRandomPoints(1_00_000, 10_000_000);
         //List<Point> points = List.of(new Point(800,800), new Point(801,801), new Point(1000, 1000));
-        //List<Double> timings = new ArrayList<>();
-        //ISimilarityIdentifier similarityIdentifier = new SimilarityIdentifier(points, timings);
-        //System.out.println(similarityIdentifier.toString());
+        List<Double> timings = new ArrayList<>();
+        LSH lsh = new LSH(points);
+        Point p = new Point(124, 1425);
+        for (int i = 0; i < 10_000; i++){
+            lsh.findKNearestNeighbors(1, p);
+            //System.out.println(ps.getFirst().x + "; " + ps.getFirst().y);
+        }
 
         //demoPerfectHash();
         //demoExtendibleHash();
-        demoLSH();
+        //demoLSH();
     }
 
-    public static List<Double> avgs(List<List<Double>> data){
-        List<Double> avgs = new ArrayList<>();
+    public static MutableDoubleList avgs(List<MutableDoubleList> data){
+        MutableDoubleList avgs = DoubleLists.mutable.empty();
         for (int i = 0; i < data.getFirst().size(); i++){
             avgs.add(0d);
         }
         for (int i = 0; i < data.size(); i++){
-            List<Double> row = data.get(i);
+            MutableDoubleList row = data.get(i);
             for (int j = 0; j < row.size(); j++){
                 avgs.set(j, avgs.get(j) + row.get(j));
             }
@@ -76,7 +81,7 @@ public class Main {
     }
 
     public static void demoPerfectHash() throws TooBigNumberException, CollisionException {
-        List<Integer> possibleKeys = List.of(1,52, 42, 353, 12);
+        MutableIntList possibleKeys = IntLists.mutable.of(1,52, 42, 353, 12);
         com.itmo.siaod.perfect_hash.IHashTableSiaod ht = new HashTableSiaod(possibleKeys);
         ht.put(1, 24);
         ht.put(353, 412);
@@ -102,7 +107,14 @@ public class Main {
 
     public static void demoLSH(){
         List<Point> points = List.of(new Point(0, 0), new Point(1,1), new Point(2,2), new Point(1000,1000));
-        ISimilarityIdentifier similarityIdentifier = new SimilarityIdentifier(points, new ArrayList<>());
-        System.out.println(similarityIdentifier.toString());
+        LSH lsh = new LSH(points);
+        List<Point> nearest = lsh.findKNearestNeighbors(1, new Point(812,845));
+        if (nearest == null){
+            System.out.println("Nothing");
+            return;
+        }
+        for (Point p : nearest){
+            System.out.println(p.x + "; " + p.y);
+        }
     }
 }
